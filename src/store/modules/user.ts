@@ -81,7 +81,7 @@ class User extends VuexModule implements IUserState {
       throw Error('GetUserInfo: token is undefined!')
     }
     // 这里应该是需要改
-    const { data } = await getUserInfo({ /* Your params here */ })
+    const { data } = await getUserInfo({ })
     console.log(data)
     if (!data) {
       throw Error('Verification failed, please Login again.')

@@ -15,13 +15,6 @@ export const getArticles = (params: any) =>
     params
   })
 
-export const getArticle = (id: number, params: any) =>
-  request({
-    url: `/articles/${id}`,
-    method: 'get',
-    params
-  })
-
 export const createArticle = (data: any) =>
   request({
     url: '/new',

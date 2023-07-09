@@ -9,7 +9,7 @@
         <el-col :span="8">
             <el-input v-model="input" placeholder="请输入内容" type="flex" justify="center" style="margin-top:70px;margin-left:98%">
             </el-input>
-            <el-row type="flex" justify="center" style="margin-top:40px;margin-left:1250px">
+            <el-row type="flex" justify="center" style="margin-top:40px;margin-left:150%">
               <el-button  class="el-button-search">搜索</el-button>
               <el-button  class="el-button-search" >查询语法</el-button>
             </el-row>
@@ -23,28 +23,10 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { UserModule } from '@/store/modules/user'
-import AdminDashboard from './admin/index.vue'
-import EditorDashboard from './editor/index.vue'
 
-  @Component({
-    name: 'Dashboard',
-    components: {
-      AdminDashboard,
-      EditorDashboard
-    }
-  })
 export default class extends Vue {
-[x: string]: any
-    private currentRole = 'admin-dashboard'
-
-    get roles() {
-      return UserModule.roles
-    }
-
     created() {
-      if (!this.roles.includes('admin')) {
-        this.currentRole = 'editor-dashboard'
-      }
+
     }
 }
 </script>

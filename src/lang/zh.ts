@@ -64,7 +64,8 @@ export default {
     externalLink: '外链',
     profile: '个人中心',
     dialog: '日志',
-    users: '用户管理'
+    users: '用户管理',
+    dialog_edit:"日志管理"
   },
   navbar: {
     logOut: '退出登录',
@@ -137,7 +138,24 @@ export default {
     draft: '草稿',
     delete: '删除',
     cancel: '取 消',
-    confirm: '确 定'
+    confirm: '确 定',
+    dialog_time:'日志记录时间',
+    dialog_name:'日志名',
+    dialog_des:'日志描述',
+    dialog_kind:'日志分类',
+    dialog_lev:'日志等级',
+    equip_no:'设备编号',
+    equip_name:'设备名称',
+    operation:'操作'
+
+  },
+  users:{
+    id:'用户id',
+    name:'登录用户名',
+    cryptology:'登录密码',
+    create_time:'创建时间',
+    character:'用户角色',
+    action:'操作'
   },
   example: {
     warning: '创建和编辑页面是不能被 keep-alive 缓存的，因为keep-alive 的 include 目前不支持根据路由来缓存，所以目前都是基于 component name 来进行缓存的。如果你想类似的实现缓存效果，可以使用 localStorage 等浏览器缓存方案。或者不要使用 keep-alive 的 include，直接缓存所有页面。详情见'

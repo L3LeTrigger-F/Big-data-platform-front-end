@@ -1,84 +1,5 @@
 <template>
   <div class="app-container">
-    <div class="filter-container">
-      <el-input
-        v-model="listQuery.title"
-        :placeholder="$t('table.title')"
-        style="width: 200px;"
-        class="filter-item"
-        @keyup.enter.native="handleFilter"
-      />
-        <el-option
-          v-for="item in importanceOptions"
-          :key="item"
-          :label="item"
-          :value="item"
-        />
-      </el-select>
-      <el-select
-        v-model="listQuery.type"
-        :placeholder="$t('table.type')"
-        clearable
-        class="filter-item"
-        style="width: 130px"
-      >
-        <el-option
-          v-for="item in calendarTypeOptions"
-          :key="item.key"
-          :label="item.displayName+'('+item.key+')'"
-          :value="item.key"
-        />
-      </el-select>
-      <el-select
-        v-model="listQuery.sort"
-        style="width: 140px"
-        class="filter-item"
-        @change="handleFilter"
-      >
-        <el-option
-          v-for="item in sortOptions"
-          :key="item.key"
-          :label="item.label"
-          :value="item.key"
-        />
-      </el-select>
-      <el-button
-        v-waves
-        class="filter-item"
-        type="primary"
-        icon="el-icon-search"
-        @click="handleFilter"
-      >
-        {{ $t('table.search') }}
-      </el-button>
-      <el-button
-        class="filter-item"
-        style="margin-left: 10px;"
-        type="primary"
-        icon="el-icon-edit"
-        @click="handleCreate"
-      >
-        {{ $t('table.add') }}
-      </el-button>
-      <el-button
-        v-waves
-        :loading="downloadLoading"
-        class="filter-item"
-        type="primary"
-        icon="el-icon-download"
-        @click="handleDownload"
-      >
-        {{ $t('table.export') }}
-      </el-button>
-      <el-checkbox
-        v-model="showReviewer"
-        class="filter-item"
-        style="margin-left:15px;"
-        @change="tableKey=tableKey+1"
-      >
-        {{ $t('table.reviewer') }}
-      </el-checkbox>
-    </div>
  <!--以上都是搜索框的内容  -->
       <!-- 下面是列表展示  -->
       <!-- v-loading 过渡效果 listLoading
@@ -99,144 +20,67 @@
     >
       <!-- id -->
       <el-table-column
-        :label="$t('table.id')"
+        :label="$t('users.id')"
         prop="id"
         sortable="custom"
         align="center"
-        width="80"
+        width="120"
         :class-name="getSortClass('id')"
       >
         <template slot-scope="{row}">
           <span>{{ row.id }}</span>
         </template>
       </el-table-column>
-      <!-- 日志记录时间 -->
+
+      <!-- 登录用户名-->
       <el-table-column
-        :label="$t('table.date')"
-        width="180px"
+        :label="$t('users.name')"
+        width="250px"
         align="center"
       >
         <template slot-scope="{row}">
-          <span>{{ row.timestamp | parseTime }}</span>
-        </template>
-      </el-table-column>
-      <!-- 日志名 -->
-      <el-table-column
-        :label="$t('table.title')"
-        min-width="150px"
-      >
-        <template slot-scope="{row}">
-          <span>{{ row.title }}</span>
-          <!-- <el-tag>{{ row.type | typeFilter }}</el-tag> -->
+          <span>{{ row.name }}</span>
         </template>
       </el-table-column>
 
-      <!-- 日志描述 -->
+      <!-- 登录密码 -->
       <el-table-column
-        :label="$t('table.title')"
-        min-width="150px"
+        :label="$t('users.cryptology')"
+        min-width="300px"
       >
         <template slot-scope="{row}">
-          <span>{{ row.title }}</span>
+          <span
+            class="link-type"
+            @click="handleUpdate(row)"
+          >{{ row.cryptology }}</span>
           <!-- <el-tag>{{ row.type | typeFilter }}</el-tag> -->
         </template>
       </el-table-column>
-      <!-- 日志分类 -->
+      <!--创建时间 -->
       <el-table-column
-        :label="$t('table.title')"
-        min-width="150px"
-      >
-        <template slot-scope="{row}">
-          <span>{{ row.title }}</span>
-          <!-- <el-tag>{{ row.type | typeFilter }}</el-tag> -->
-        </template>
-      </el-table-column>
-      <!-- 日志等级 -->
-      <el-table-column
-        :label="$t('table.title')"
-        min-width="150px"
-      >
-        <template slot-scope="{row}">
-          <span>{{ row.title }}</span>
-          <!-- <el-tag>{{ row.type | typeFilter }}</el-tag> -->
-        </template>
-      </el-table-column>
-      <!-- 设备编号 -->
-      <el-table-column
-        :label="$t('table.title')"
-        min-width="150px"
-      >
-        <template slot-scope="{row}">
-          <span>{{ row.title }}</span>
-          <!-- <el-tag>{{ row.type | typeFilter }}</el-tag> -->
-        </template>
-      </el-table-column>
-      <!-- 设备名称 -->
-      <el-table-column
-        :label="$t('table.author')"
-        width="180px"
+        :label="$t('users.create_time')"
+        width="250px"
         align="center"
       >
         <template slot-scope="{row}">
-          <span>{{ row.author }}</span>
+          <span>{{ row.create_time }}</span>
         </template>
       </el-table-column>
-
-      <!-- 审核人 -->
+      <!-- 用户角色 -->
       <el-table-column
-        v-if="showReviewer"
-        :label="$t('table.reviewer')"
-        width="110px"
+        :label="$t('users.character')"
+        width="250px"
         align="center"
       >
         <template slot-scope="{row}">
-          <span style="color:red;">{{ row.reviewer }}</span>
+          <span>{{ row.character }}</span>
         </template>
       </el-table-column>
-      <!-- 重要性 -->
-      <!-- <el-table-column -->
-        <!-- :label="$t('table.importance')" -->
-        <!-- width="105px" -->
-      <!-- > -->
-        <!-- <template slot-scope="{row}"> -->
-          <!-- <svg-icon -->
-            <!-- v-for="n in +row.importance" -->
-            <!-- :key="n" -->
-            <!-- name="star" -->
-            <!-- class="meta-item__icon" -->
-          <!-- /> -->
-        <!-- </template> -->
-      <!-- </el-table-column> -->
-      <!-- <el-table-column -->
-        <!-- :label="$t('table.readings')" -->
-        <!-- align="center" -->
-        <!-- width="95" -->
-      <!-- > -->
-        <!-- <template slot-scope="{row}"> -->
-          <!-- <span -->
-            <!-- v-if="row.pageviews" -->
-            <!-- class="link-type" -->
-            <!-- @click="handleGetPageviews(row.pageviews)" -->
-          <!-- >{{ row.pageviews }}</span> -->
-          <!-- <span v-else>0</span> -->
-        <!-- </template> -->
-      <!-- </el-table-column> -->
-      <!-- <el-table-column -->
-        <!-- :label="$t('table.status')" -->
-        <!-- class-name="status-col" -->
-        <!-- width="100" -->
-      <!-- > -->
-        <!-- <template slot-scope="{row}"> -->
-          <!-- <el-tag :type="row.status | articleStatusFilter"> -->
-            <!-- {{ row.status }} -->
-          <!-- </el-tag> -->
-        <!-- </template> -->
-      <!-- </el-table-column> -->
       <!-- 操作 -->
       <el-table-column
-        :label="$t('table.actions')"
+        :label="$t('users.action')"
         align="center"
-        width="230"
+        width="300"
         class-name="fixed-width"
       >
         <template slot-scope="{row, $index}">
@@ -274,43 +118,51 @@
       :title="textMap[dialogStatus]"
       :visible.sync="dialogFormVisible"
     >
-
-      <el-form
+    <el-form
         ref="dataForm"
         :rules="rules"
-        :model="tempArticleData"
+        :model="tempUsersData"
         label-position="left"
         label-width="100px"
         style="width: 400px; margin-left:50px;"
-      >
-        <!-- 证据链头 -->
-      <el-form-item :label="$t('table.remark')">
-        <el-input
-            v-model="tempArticleData.abstractContent"
+    >
+      <!-- 登录用户名 -->
+        <el-form-item :label="$t('users.name')">
+          <el-input
+            v-model="tempUsersData.name"
             :autosize="{minRows: 1, maxRows: 1}"
             type="textarea"
             placeholder="Please input"
           />
         </el-form-item>
-        <!-- 证据链尾 -->
-        <el-form-item :label="$t('table.remark')">
+        <!-- 登录密码 -->
+        <el-form-item :label="$t('users.cryptology')">
           <el-input
-            v-model="tempArticleData.abstractContent"
+            v-model="tempUsersData.cryptology"
             :autosize="{minRows: 1, maxRows: 1}"
             type="textarea"
             placeholder="Please input"
           />
         </el-form-item>
-        <!-- 评论 -->
-        <el-form-item :label="$t('table.remark')">
+        <!-- 创建时间 -->
+        <el-form-item :label="$t('users.create_time')">
           <el-input
-            v-model="tempArticleData.abstractContent"
-            :autosize="{minRows: 2, maxRows: 4}"
+            v-model="tempUsersData.create_time"
+            :autosize="{minRows: 1, maxRows: 1}"
             type="textarea"
             placeholder="Please input"
           />
         </el-form-item>
-      </el-form>
+        <!-- 用户角色 -->
+        <el-form-item :label="$t('users.character')">
+          <el-input
+            v-model="tempUsersData.character"
+            :autosize="{minRows: 1, maxRows: 1}"
+            type="textarea"
+            placeholder="Please input"
+          />
+        </el-form-item>
+    </el-form>
       <div
         slot="footer"
         class="dialog-footer"
@@ -320,7 +172,7 @@
         </el-button>
         <el-button
           type="primary"
-          @click="dialogStatus==='create'?createData():updateData()"
+          @click="updateData()"
         >
           {{ $t('table.confirm') }}
         </el-button>
@@ -364,10 +216,9 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { Form } from 'element-ui'
 import { cloneDeep } from 'lodash'
-import { getArticles, getPageviews, createArticle, updateArticle, defaultArticleData } from '@/api/articles'
+import { getUsers, updateUser, defaultUsersData, deleteUser  } from '@/api/users'
 import { EvidenceChainData } from '@/api/types'
 import { exportJson2Excel } from '@/utils/excel'
-import { formatJson } from '@/utils'
 import Pagination from '@/components/Pagination/index.vue'
 
 const calendarTypeOptions = [
@@ -400,9 +251,10 @@ export default class extends Vue {
   private total = 0
   private listLoading = true
   private listQuery = {
-    page: 1,
+    page_id: 1,
     limit: 20,
-    importance: undefined,
+    // importance: undefined,
+    table_id: 5,
     title: undefined,
     type: undefined,
     sort: '+id'
@@ -433,7 +285,7 @@ export default class extends Vue {
   }
 
   private downloadLoading = false
-  private tempArticleData = defaultArticleData
+  private tempUsersData = defaultUsersData
 
   created() {
     this.getList()
@@ -441,7 +293,7 @@ export default class extends Vue {
 
   private async getList() {
     this.listLoading = true
-    const { data } = await getArticles(this.listQuery)
+    const { data } = await getUsers(this.listQuery)
     this.list = data.items
     this.total = data.total
     // Just to simulate the time of the request
@@ -451,7 +303,7 @@ export default class extends Vue {
   }
 
   private handleFilter() {
-    this.listQuery.page = 1
+    this.listQuery.page_id = 1
     this.getList()
   }
 
@@ -485,39 +337,12 @@ export default class extends Vue {
   }
 
   private resetTempArticleData() {
-    this.tempArticleData = cloneDeep(defaultArticleData)
+    this.tempUsersData = cloneDeep(defaultUsersData)
   }
 
-  private handleCreate() {
-    this.resetTempArticleData()
-    this.dialogStatus = 'create'
-    this.dialogFormVisible = true
-    this.$nextTick(() => {
-      (this.$refs.dataForm as Form).clearValidate()
-    })
-  }
-
-  private createData() {
-    (this.$refs.dataForm as Form).validate(async(valid) => {
-      if (valid) {
-        const articleData = this.tempArticleData
-        articleData.id = Math.round(Math.random() * 100) + 1024 // mock a id
-        // articleData.author = 'vue-typescript-admin'
-        const { data } = await createArticle({ article: articleData })
-        this.list.unshift(data.article)
-        this.dialogFormVisible = false
-        this.$notify({
-          title: '成功',
-          message: '创建成功',
-          type: 'success',
-          duration: 2000
-        })
-      }
-    })
-  }
 
   private handleUpdate(row: any) {
-    this.tempArticleData = Object.assign({}, row)
+    this.tempUsersData = Object.assign({}, row)
     // this.tempArticleData.timestamp = +new Date(this.tempArticleData.timestamp)
     this.dialogStatus = 'update'
     this.dialogFormVisible = true
@@ -529,9 +354,10 @@ export default class extends Vue {
   private updateData() {
     (this.$refs.dataForm as Form).validate(async(valid) => {
       if (valid) {
-        const tempData = Object.assign({}, this.tempArticleData)
+        // this.tempArticleData=.unshift(data.article)
+        const tempData = Object.assign({}, this.tempUsersData)
         // tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-        const {data} = await updateArticle({temp_ID:tempData.id,article:tempData})
+        const { data } = await updateUser({table_ID:this.listQuery.table_id, tempData_ID: this.tempUsersData.id, article: tempData })
         const index = this.list.findIndex(v => v.id === data.article.id)
         this.list.splice(index, 1, data.article)
         this.dialogFormVisible = false
@@ -546,6 +372,7 @@ export default class extends Vue {
   }
 
   private handleDelete(row: any, index: number) {
+    deleteUser({ table_id: this.listQuery.table_id, row_id: row.id })
     this.$notify({
       title: 'Success',
       message: 'Delete Successfully',
@@ -555,19 +382,5 @@ export default class extends Vue {
     this.list.splice(index, 1)
   }
 
-  private async handleGetPageviews(pageviews: string) {
-    const { data } = await getPageviews({ pageviews })
-    this.pageviewsData = data.pageviews
-    this.dialogPageviewsVisible = true
-  }
-
-  private handleDownload() {
-    this.downloadLoading = true
-    const tHeader = ['timestamp', 'title', 'type', 'importance', 'status']
-    const filterVal = ['timestamp', 'title', 'type', 'importance', 'status']
-    const data = formatJson(filterVal, this.list)
-    exportJson2Excel(tHeader, data, 'table-list')
-    this.downloadLoading = false
-  }
 }
 </script>

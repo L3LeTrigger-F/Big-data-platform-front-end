@@ -107,7 +107,7 @@ export default class extends Vue {
   private listQuery = {
     page_id: 1,
     limit: 20,
-    table_id: 1,
+    table_id: 4,
     title: undefined,
     type: undefined,
     sort: '+id'

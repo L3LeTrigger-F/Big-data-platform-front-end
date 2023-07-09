@@ -15,21 +15,6 @@
           :value="item"
         />
       </el-input>
-      <!-- 选择类型 -->
-      <el-select
-        v-model="listQuery.type"
-        :placeholder="$t('table.type')"
-        clearable
-        class="filter-item"
-        style="width: 130px"
-      >
-        <el-option
-          v-for="item in calendarTypeOptions"
-          :key="item.key"
-          :label="item.displayName+'('+item.key+')'"
-          :value="item.key"
-        />
-      </el-select>
       <!-- 排序 -->
       <el-select
         v-model="listQuery.sort"
@@ -89,18 +74,77 @@
         prop="id"
         sortable="custom"
         align="center"
-        width="120"
+        width="100"
         :class-name="getSortClass('id')"
       >
         <template slot-scope="{row}">
           <span>{{ row.id }}</span>
         </template>
       </el-table-column>
-
-      <!-- 显示证据链头-->
+      <!-- 日志记录时间 -->
       <el-table-column
-        :label="$t('table.evi_head')"
-        width="250px"
+        :label="$t('table.dialog_time')"
+        width="180px"
+        align="center"
+      >
+        <template slot-scope="{row}">
+          <span>{{ row.evidence_head_id }}</span>
+        </template>
+      </el-table-column>
+      <!-- 日志名-->
+      <el-table-column
+        :label="$t('table.dialog_name')"
+        width="180px"
+        align="center"
+      >
+        <template slot-scope="{row}">
+          <span>{{ row.evidence_head_id }}</span>
+        </template>
+      </el-table-column>
+      <!-- 日志描述 -->
+      <el-table-column
+        :label="$t('table.dialog_des')"
+        width="350px"
+        align="center"
+      >
+        <template slot-scope="{row}">
+          <span>{{ row.evidence_head_id }}</span>
+        </template>
+      </el-table-column>
+      <!-- 日志分类 -->
+      <el-table-column
+        :label="$t('table.dialog_kind')"
+        width="150px"
+        align="center"
+      >
+        <template slot-scope="{row}">
+          <span>{{ row.evidence_head_id }}</span>
+        </template>
+      </el-table-column>
+      <!-- 日志等级 -->
+      <el-table-column
+        :label="$t('table.dialog_lev')"
+        width="150px"
+        align="center"
+      >
+        <template slot-scope="{row}">
+          <span>{{ row.evidence_head_id }}</span>
+        </template>
+      </el-table-column>
+      <!-- 设备编号 -->
+      <el-table-column
+        :label="$t('table.equip_no')"
+        width="150px"
+        align="center"
+      >
+        <template slot-scope="{row}">
+          <span>{{ row.evidence_head_id }}</span>
+        </template>
+      </el-table-column>
+      <!-- 设备名称 -->
+      <el-table-column
+        :label="$t('table.equip_name')"
+        width="150px"
         align="center"
       >
         <template slot-scope="{row}">
@@ -108,34 +152,10 @@
         </template>
       </el-table-column>
 
-      <!-- 证据链id -->
       <el-table-column
-        :label="$t('table.evi_id')"
-        min-width="300px"
-      >
-        <template slot-scope="{row}">
-          <span
-            class="link-type"
-            @click="handleUpdate(row)"
-          >{{ row.evidence_id }}</span>
-          <!-- <el-tag>{{ row.type | typeFilter }}</el-tag> -->
-        </template>
-      </el-table-column>
-      <!-- 证据链尾 -->
-      <el-table-column
-        :label="$t('table.evi_tail')"
-        width="250px"
+        :label="$t('table.operation')"
         align="center"
-      >
-        <template slot-scope="{row}">
-          <span>{{ row.evidence_tail_id }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column
-        :label="$t('table.actions')"
-        align="center"
-        width="300"
+        width="270"
         class-name="fixed-width"
       >
         <template slot-scope="{row, $index}">
@@ -154,6 +174,14 @@
             @click="handleDelete(row, $index)"
           >
             {{ $t('table.delete') }}
+          </el-button>
+          <el-button
+            v-if="row.status!=='deleted'"
+            size="mini"
+            type="success"
+            @click="handleDelete(row, $index)"
+          >
+            {{ $t("查看详情") }}
           </el-button>
         </template>
       </el-table-column>
@@ -176,34 +204,107 @@
     <el-form
         ref="dataForm"
         :rules="rules"
-        :model="tempArticleData"
+        :model="tempDialogsData"
         label-position="left"
         label-width="100px"
         style="width: 400px; margin-left:50px;"
     >
-      <!-- 证据链头 -->
-        <el-form-item :label="$t('table.evi_head')">
+      <!-- 日志名 -->
+        <el-form-item :label="日志名">
+
           <el-input
-            v-model="tempArticleData.evidence_head_id"
+            v-model="tempDialogsData.evidence_head_id"
             :autosize="{minRows: 1, maxRows: 1}"
             type="textarea"
             placeholder="Please input"
           />
         </el-form-item>
-        <!-- 证据链尾 -->
-        <el-form-item :label="$t('table.evi_tail')">
+      <!-- 日志描述 -->
+        <el-form-item :label="日志描述">
           <el-input
-            v-model="tempArticleData.evidence_tail_id"
+            v-model="tempDialogsData.evidence_head_id"
             :autosize="{minRows: 1, maxRows: 1}"
             type="textarea"
             placeholder="Please input"
           />
         </el-form-item>
-        <!-- 评论 -->
-        <el-form-item :label="$t('table.remark')">
+      <!-- 日志分类 -->
+        <el-form-item :label="日志分类">
           <el-input
-            v-model="tempArticleData.evidence_id"
-            :autosize="{minRows: 2, maxRows: 4}"
+            v-model="tempDialogsData.evidence_head_id"
+            :autosize="{minRows: 1, maxRows: 1}"
+            type="textarea"
+            placeholder="Please input"
+          />
+        </el-form-item>
+      <!-- 日志等级 -->
+        <el-form-item :label="日志等级">
+          <el-input
+            v-model="tempDialogsData.evidence_head_id"
+            :autosize="{minRows: 1, maxRows: 1}"
+            type="textarea"
+            placeholder="Please input"
+          />
+        </el-form-item>
+      <!-- 设备编号 -->
+        <el-form-item :label="设备编号">
+          <el-input
+            v-model="tempDialogsData.evidence_head_id"
+            :autosize="{minRows: 1, maxRows: 1}"
+            type="textarea"
+            placeholder="Please input"
+          />
+        </el-form-item>
+      <!-- 设备厂商 -->
+        <el-form-item :label="设备厂商">
+          <el-input
+            v-model="tempDialogsData.evidence_head_id"
+            :autosize="{minRows: 1, maxRows: 1}"
+            type="textarea"
+            placeholder="Please input"
+          />
+        </el-form-item>
+      <!-- 产品名 -->
+        <el-form-item :label="产品名">
+          <el-input
+            v-model="tempDialogsData.evidence_head_id"
+            :autosize="{minRows: 1, maxRows: 1}"
+            type="textarea"
+            placeholder="Please input"
+          />
+        </el-form-item>
+      <!-- 产品版本 -->
+        <el-form-item :label="产品版本">
+          <el-input
+            v-model="tempDialogsData.evidence_head_id"
+            :autosize="{minRows: 1, maxRows: 1}"
+            type="textarea"
+            placeholder="Please input"
+          />
+        </el-form-item>
+      <!-- 策略名称 -->
+        <el-form-item :label="策略名称">
+          <el-input
+            v-model="tempDialogsData.evidence_head_id"
+            :autosize="{minRows: 1, maxRows: 1}"
+            type="textarea"
+            placeholder="Please input"
+          />
+        </el-form-item>
+      <!-- 进程-->
+        <el-form-item :label="进程">
+          <el-input
+            v-model="tempDialogsData.evidence_head_id"
+            :autosize="{minRows: 1, maxRows: 1}"
+            type="textarea"
+            placeholder="Please input"
+          />
+        </el-form-item>
+      <!-- 账户名-->
+        <el-form-item :label="账户名">
+          <el-input
+            v-model="tempDialogsData.evidence_head_id"
+            :autosize="{minRows: 1, maxRows: 1}"
             type="textarea"
             placeholder="Please input"
           />
@@ -224,37 +325,49 @@
         </el-button>
       </div>
     </el-dialog>
-
+    <!-- 查看详情 -->
     <el-dialog
-      :visible.sync="dialogPageviewsVisible"
-      title="Reading statistics"
+      :visible.sync="dialogDescriptionVisible"
     >
-      <el-table
-        :data="pageviewsData"
-        border
-        fit
-        highlight-current-row
-        style="width: 100%"
-      >
-        <el-table-column
-          prop="key"
-          label="Channel"
-        />
-        <el-table-column
-          prop="pageviews"
-          label="Pageviews"
-        />
-      </el-table>
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
-        <el-button
-          type="primary"
-          @click="dialogPageviewsVisible = false"
-        >{{ $t('table.confirm') }}</el-button>
-      </span>
+    <el-form
+        ref="dataForm"
+        :rules="rules"
+        :model="tempDialogsData"
+        label-position="left"
+        label-width="100px"
+        style="width: 400px; margin-left:50px;"
+    >
+      <!-- 日志名 -->
+        <el-form-item :label="日志名">
+          <el-description
+            v-model="tempDialogsData.evidence_head_id"
+            :autosize="{minRows: 1, maxRows: 1}"
+            type="textarea"
+            placeholder="Please input"
+          />
+        </el-form-item>
+    </el-form>
     </el-dialog>
+      <!-- > -->
+        <!-- <el-table-column -->
+          <!-- prop="key" -->
+          <!-- label="Channel" -->
+        <!-- /> -->
+        <!-- <el-table-column -->
+          <!-- prop="pageviews" -->
+          <!-- label="Pageviews" -->
+        <!-- /> -->
+      <!-- </el-table> -->
+      <!-- <span -->
+        <!-- slot="footer" -->
+        <!-- class="dialog-footer" -->
+      <!-- > -->
+        <!-- <el-button -->
+          <!-- type="primary" -->
+          <!-- @click="dialogPageviewsVisible = false" -->
+        <!-- >{{ $t('table.confirm') }}</el-button> -->
+      <!-- </span> -->
+    <!-- </el-dialog> -->
   </div>
 </template>
 
@@ -262,11 +375,11 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { Form } from 'element-ui'
 import { cloneDeep } from 'lodash'
-import { getArticles, getPageviews, createArticle, updateArticle, defaultArticleData, deleteArticle } from '@/api/articles'
 import { EvidenceChainData } from '@/api/types'
 import { exportJson2Excel } from '@/utils/excel'
 import { formatJson } from '@/utils'
 import Pagination from '@/components/Pagination/index.vue'
+import { createDialogs, getDialogs,deleteDialogs,updateDialogs,defaultDialogsData } from '@/api/dialogs'
 
 const calendarTypeOptions = [
   { key: 'CN', displayName: 'China' },
@@ -324,6 +437,7 @@ export default class extends Vue {
   }
 
   private dialogPageviewsVisible = false
+  private dialogDescriptionVisible = false
   private pageviewsData = []
   private rules = {
     type: [{ required: true, message: 'type is required', trigger: 'change' }],
@@ -332,7 +446,7 @@ export default class extends Vue {
   }
 
   private downloadLoading = false
-  private tempArticleData = defaultArticleData
+  private tempDialogsData = defaultDialogsData
 
   created() {
     this.getList()
@@ -340,7 +454,7 @@ export default class extends Vue {
 
   private async getList() {
     this.listLoading = true
-    const { data } = await getArticles(this.listQuery)
+    const { data } = await getDialogs(this.listQuery)
     this.list = data.items
     this.total = data.total
     // Just to simulate the time of the request
@@ -383,12 +497,12 @@ export default class extends Vue {
     return sort === `+${key}` ? 'ascending' : 'descending'
   }
 
-  private resetTempArticleData() {
-    this.tempArticleData = cloneDeep(defaultArticleData)
+  private resettempDialogsData() {
+    this.tempDialogsData = cloneDeep(defaultDialogsData)
   }
 
   private handleCreate() {
-    this.resetTempArticleData()
+    this.resettempDialogsData()
     this.dialogStatus = 'create'
     this.dialogFormVisible = true
     this.$nextTick(() => {
@@ -399,10 +513,10 @@ export default class extends Vue {
   private createData() {
     (this.$refs.dataForm as Form).validate(async(valid) => {
       if (valid) {
-        const articleData = this.tempArticleData
+        const articleData = this.tempDialogsData
         articleData.id = Math.round(Math.random() * 100) + 1024 // mock a id
-        const { data } = await createArticle({ table_id: this.listQuery.table_id, articleData: this.tempArticleData })
-        this.list.unshift(this.tempArticleData)
+        const { data } = await createDialogs({ table_id: this.listQuery.table_id, articleData: this.tempDialogsData })
+        this.list.unshift(this.tempDialogsData)
         this.dialogFormVisible = false
         this.$notify({
           title: '成功',
@@ -415,8 +529,8 @@ export default class extends Vue {
   }
 
   private handleUpdate(row: any) {
-    this.tempArticleData = Object.assign({}, row)
-    // this.tempArticleData.timestamp = +new Date(this.tempArticleData.timestamp)
+    this.tempDialogsData = Object.assign({}, row)
+    // this.tempDialogsData.timestamp = +new Date(this.tempDialogsData.timestamp)
     this.dialogStatus = 'update'
     this.dialogFormVisible = true
     this.$nextTick(() => {
@@ -427,10 +541,10 @@ export default class extends Vue {
   private updateData() {
     (this.$refs.dataForm as Form).validate(async(valid) => {
       if (valid) {
-        // this.tempArticleData=.unshift(data.article)
-        const tempData = Object.assign({}, this.tempArticleData)
+        // this.tempDialogsData=.unshift(data.article)
+        const tempData = Object.assign({}, this.tempDialogsData)
         // tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-        const { data } = await updateArticle({table_ID:this.listQuery.table_id, tempData_ID: this.tempArticleData.id, article: tempData })
+        const { data } = await updateDialogs({table_ID:this.listQuery.table_id, tempData_ID: this.tempDialogsData.id, article: tempData })
         const index = this.list.findIndex(v => v.id === data.article.id)
         this.list.splice(index, 1, data.article)
         this.dialogFormVisible = false
@@ -445,7 +559,7 @@ export default class extends Vue {
   }
 
   private handleDelete(row: any, index: number) {
-    deleteArticle({ table_id: this.listQuery.table_id, row_id: row.id })
+    deleteDialogs({ table_id: this.listQuery.table_id, row_id: row.id })
     this.$notify({
       title: 'Success',
       message: 'Delete Successfully',
@@ -453,12 +567,6 @@ export default class extends Vue {
       duration: 2000
     })
     this.list.splice(index, 1)
-  }
-
-  private async handleGetPageviews(pageviews: string) {
-    const { data } = await getPageviews({ pageviews })
-    this.pageviewsData = data.pageviews
-    this.dialogPageviewsVisible = true
   }
 }
 </script>

@@ -14,42 +14,29 @@ export const defaultDialogsData: DialogData = {
 
 export const getDialogs = (params: any) =>
   request({
-    url: '/dialogs',
+    url: '/show',
     method: 'get',
     params
   })
 
 export const createDialogs = (params: any) =>
   request({
-    url: '/dialogs',
+    url: '/new',
     method: 'post',
     params
   })
-export const getArticle = (id: number, params: any) =>
+export const updateDialogs = (params: any) =>
   request({
-    url: `/articles/${id}`,
-    method: 'get',
-    params
-  })
-
-export const createArticle = (data: any) =>
-  request({
-    url: '/articles',
-    method: 'post',
-    data
-  })
-
-export const updateDialogs = (id: number, data: any) =>
-  request({
-    url: `/dialogs/${id}`,
+    url: `/modify`,
     method: 'put',
-    data
+    params
   })
 
-export const deleteArticle = (id: number) =>
+export const deleteDialogs = (params: any) =>
   request({
-    url: `/articles/${id}`,
-    method: 'delete'
+    url: `/delete`,
+    method: 'delete',
+    params
   })
 
 export const getPageviews = (params: any) =>
