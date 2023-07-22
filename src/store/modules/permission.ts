@@ -44,11 +44,12 @@ class Permission extends VuexModule implements IPermissionState {
   @Action
   public GenerateRoutes(roles: string[]) {
     let accessedRoutes
-    if (roles.includes('editor')) {
-      accessedRoutes = asyncRoutes
-    } else {
-      accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
-    }
+    // 有三个role：管理员、操作员和审计员
+    // if (roles.includes('editor')) {
+      // accessedRoutes = asyncRoutes
+    // } else {
+    accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
+    // }
     this.SET_ROUTES(accessedRoutes)
   }
 }

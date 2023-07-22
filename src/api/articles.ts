@@ -14,7 +14,24 @@ export const getArticles = (params: any) =>
     method: 'get',
     params
   })
-
+  export const detailArticles = (params: any) =>
+  request({
+    url: '/detail',
+    method: 'get',
+    params
+  })
+  export const getGrammar = (params: any) =>
+  request({
+    url: '/show_search',
+    method: 'get',
+    params
+  })
+export const getContext=(params:any)=>
+    request({
+    url: '/show',
+    method: 'get',
+    params
+  })
 export const createArticle = (data: any) =>
   request({
     url: '/new',

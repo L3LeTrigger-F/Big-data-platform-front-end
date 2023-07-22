@@ -38,7 +38,32 @@ export interface IUserData {
 }
 
 
+export interface EvidenceData {
+  id: number;
+  status: string;
+  title: string;
+  abstractContent: string;
+  fullContent: string;
+  sourceURL: string;
+  imageURL: string;
+  timestamp: string | number;
+  platforms: string[];
+  disableComment: boolean;
+  importance: number;
+  author: string;
+  reviewer: string;
+  type: string;
+  pageviews: number;
 
+  src_id: string | number;
+  dst_id: string | number;
+  yu: string;
+  type1: string;
+  type2: string;
+  type3: string;
+  name1: string;
+  result: string;
+}
 export interface IRoleData {
   key: string;
   name: string;

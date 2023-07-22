@@ -96,10 +96,22 @@
             v-if="row.status!=='deleted'"
             size="mini"
             type="danger"
-            @click="handleDelete(row, $index)"
+            @click="showConfirmDialog"
           >
             {{ $t('table.delete') }}
           </el-button>
+          <el-dialog
+            title="确认删除"
+            :visible.sync="confirmDialogVisible"
+            width="30%"
+            @close="handleConfirmDialogClose"
+          >
+              <span>确定要删除该条目吗？</span>
+              <span slot="footer" class="dialog-footer">
+              <el-button @click="handleDelete(row, $index)">确定</el-button>
+              <el-button @click="cancelDelete">取消</el-button>
+      </span>
+    </el-dialog>
         </template>
       </el-table-column>
     </el-table>
@@ -266,7 +278,7 @@ export default class extends Vue {
     { label: 'ID Ascending', key: '+id' },
     { label: 'ID Descending', key: '-id' }
   ]
-
+  private confirmDialogVisible=false
   // private statusOptions = ['published', 'draft', 'deleted']
   private showReviewer = false
   private dialogFormVisible = false
@@ -321,7 +333,12 @@ export default class extends Vue {
       this.sortByID(order)
     }
   }
-
+  private showConfirmDialog(){
+    this.confirmDialogVisible=true
+  }
+    private handleConfirmDialogClose(){
+    this.confirmDialogVisible=false
+  }
   private sortByID(order: string) {
     if (order === 'ascending') {
       this.listQuery.sort = '+id'
@@ -372,15 +389,18 @@ export default class extends Vue {
   }
 
   private handleDelete(row: any, index: number) {
-    deleteUser({ table_id: this.listQuery.table_id, row_id: row.id })
-    this.$notify({
-      title: 'Success',
-      message: 'Delete Successfully',
-      type: 'success',
-      duration: 2000
-    })
+    deleteUser({ tableId: this.listQuery.table_id, itemId: row.id })
+    // this.$notify({
+      // title: 'Success',
+      // message: 'Delete Successfully',
+      // type: 'success',
+      // duration: 2000
+    // })
+    this.confirmDialogVisible=false
     this.list.splice(index, 1)
   }
-
+  private cancelDelete(){
+    this.confirmDialogVisible=false
+  }
 }
 </script>

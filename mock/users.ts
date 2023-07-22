@@ -16,14 +16,25 @@ const userList: IUserData[] = [
   },
   {
     id: 1,
-    username: 'editor',
+    username: 'operator',
     password: 'any',
     name: 'Normal Editor',
     avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
     introduction: 'I am an editor',
     email: 'editor@test.com',
     phone: '1234567890',
-    roles: ['editor']
+    roles: ['operator']
+  },
+  {
+    id: 2,
+    username: 'auditor',
+    password: 'any',
+    name: 'Normal operator',
+    avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
+    introduction: 'I am an editor',
+    email: 'editor@test.com',
+    phone: '1234567890',
+    roles: ['auditor']
   }
 ]
 const userCount = 100
@@ -90,12 +101,30 @@ export const getUsers = (req: Request, res: Response) => {
 
 export const getUserInfo = (req: Request, res: Response) => {
   // Mock data based on access token
-  return res.json({
-    code: 200,
-    data: {
-      user: req.header('X-Access-Token') === 'admin-token' ? userList[0] : userList[1]
-    }
-  })
+  if(req.header('X-Access-Token') === 'admin-token'){
+    return res.json({
+      code: 200,
+      data: {
+        user: userList[0]
+      }
+    })
+  }
+  else if(req.header('X-Access-Token') === 'operator-token'){
+    return res.json({
+      code: 200,
+      data: {
+        user: userList[1]
+      }
+    })}
+  else if(req.header('X-Access-Token') === 'auditor-token'){
+      return res.json({
+        code: 200,
+        data: {
+          user: userList[2]
+        }
+      })
+  }
+
 }
 
 export const getUserByName = (req: Request, res: Response) => {

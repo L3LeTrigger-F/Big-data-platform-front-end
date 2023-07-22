@@ -11,12 +11,6 @@ import tableRouter from './modules/table'
 // import nestedRouter from './modules/nested'
 
 Vue.use(VueRouter)
-
-/*
-  Note: sub-menu only appear when children.length>=1
-  Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
-*/
-
 /*
   name:'router-name'             the name field is required when using <keep-alive>, it should also match its component's name property
                                  detail see : https://vuejs.org/v2/guide/components-dynamic-async.html#keep-alive-with-Dynamic-Components
@@ -108,7 +102,7 @@ export const asyncRoutes: RouteConfig[] = [
   {
     path: '/users',
     component: Layout,
-    meta: { roles: ['editor'] },
+    meta: { roles: ['admin'] },
     children: [
       {
         path: '',
@@ -117,7 +111,7 @@ export const asyncRoutes: RouteConfig[] = [
         meta: {
           title: 'users',
           icon: 'example',
-          roles: ['editor'],
+          roles: ['admin'],
           affix: false
         }
       }
@@ -126,7 +120,7 @@ export const asyncRoutes: RouteConfig[] = [
   {
     path: '/dialog',
     component: Layout,
-    meta: { roles: ['editor'] },
+    meta: { roles: ['operator'] },
     children: [
       {
         path: '',
@@ -135,13 +129,73 @@ export const asyncRoutes: RouteConfig[] = [
         meta: {
           title: 'dialog_edit',
           icon: 'documentation',
-          roles: ['editor'],
+          roles: ['operator'],
           affix: false
         }
       }
     ]
   },
-  tableRouter
+  tableRouter,
+  {
+    path: '/rules-associated',
+    component: Layout,
+    redirect: '/rules-associated/rules-visit-table',
+    meta: {
+      title: 'rulesvisit',
+      icon: 'edit',
+      affix: true,
+      roles: ['operator','auditor']
+    },
+    children: [
+      {
+        path:'rules-manage-table',
+        component: () => import( '@/views/rules-associated/rules-visit-table.vue'),
+        name:'rules-manage-table',
+        meta:{
+          title:'rulesmanage',
+          icon:'edit',
+          affix: true,
+          roles: ['operator']
+        }
+      },
+      {
+        path:'rules-visit-table',
+        component: () => import( '@/views/rules-associated/rules-manage-table.vue'),
+        name:'rules-visit-table',
+        meta:{
+          title:'rulesvisit',
+          icon:'education',
+          roles: ['operator','auditor'],
+          affix: true
+        }
+      }
+    ]
+  },
+  {
+    path: "/evidence",
+    component: Layout,
+    redirect:"/evidence/evidence-edit",
+    meta: { title: 'evidence_edit',
+    icon: 'edit',
+    affix: false,
+    roles: ["operator"] },
+    children: [
+      {
+        path: "/evidence/evidence-edit",
+        component: () =>
+          import(
+            /* webpackChunkName: "dashboard" */ "@/views/evidence/evidence-edit.vue"
+          ),
+        name: "evidence_edit",
+        meta: {
+          title: "evidence_edit",
+          icon: "example",
+          roles: ["operator"],
+          affix: true
+        }
+      }
+    ]
+  }
 ]
 
 const createRouter = () => new VueRouter({

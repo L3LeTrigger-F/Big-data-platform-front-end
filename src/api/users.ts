@@ -18,7 +18,6 @@ export const getUsers = (params: any) =>
 
 export const getUserInfo = (data: any) =>
   request({
-    // url: '/users/info',
     url: '/init',
     method: 'post',
     data
