@@ -1,12 +1,14 @@
 import faker from 'faker'
 import { Response, Request } from 'express'
-import { IUserData } from '../src/api/types'
-
-const userList: IUserData[] = [
+import { UsersData } from '../src/api/types'
+const userList:UsersData[]=[
   {
-    id: 0,
-    username: 'admin',
-    password: 'any',
+    user_id:'0',
+    user_name:'admin',
+    password:'123456',
+    role:'1',//管理员
+    address:'武汉',
+    user_data:new Date('2023-07-25T12:34:56Z'),
     name: 'Super Admin',
     avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
     introduction: 'I am a super administrator',
@@ -15,62 +17,47 @@ const userList: IUserData[] = [
     roles: ['admin']
   },
   {
-    id: 1,
-    username: 'operator',
-    password: 'any',
+    user_id:'1',
+    user_name:'operator',
+    password:'123456',
+    role:'2',//管理员
+    address:'武汉',
+    user_data:new Date('2023-07-25T12:34:56Z'),
     name: 'Normal Editor',
     avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
     introduction: 'I am an editor',
     email: 'editor@test.com',
     phone: '1234567890',
-    roles: ['operator']
+    roles: ['editor']
   },
-  {
-    id: 2,
-    username: 'auditor',
-    password: 'any',
-    name: 'Normal operator',
-    avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
-    introduction: 'I am an editor',
-    email: 'editor@test.com',
-    phone: '1234567890',
-    roles: ['auditor']
+{
+  user_id:'2',
+  user_name:'auditor',
+  password:'123456',
+  role:'3',//审计员
+  address:'武汉',
+  user_data:new Date('2023-07-25T12:34:56Z'),
+  name: 'Normal Editor',
+  avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
+  introduction: 'I am an editor',
+  email: 'editor@test.com',
+  phone: '1234567890',
+  roles: ['operator']
   }
 ]
-const userCount = 100
-
-for (let i = 2; i < userCount; i++) {
-  userList.push({
-    id: i,
-    username: 'user_' + faker.random.alphaNumeric(9),
-    password: faker.random.alphaNumeric(20),
-    name: faker.name.findName(),
-    avatar: faker.image.imageUrl(),
-    introduction: faker.lorem.sentence(20),
-    email: faker.internet.email(),
-    phone: faker.phone.phoneNumber(),
-    roles: ['visitor']
-  })
-}
-
-export const register = (req: Request, res: Response) => {
-  return res.json({
-    code: 200
-  })
-}
 
 export const login = (req: Request, res: Response) => {
   const { username } = req.body
   console.log('123 ********')
   for (const user of userList) {
-    if (user.username === username) {
+    if (user.user_name === username) {
       return res.json({
         code: 200,
         data: {
           accessToken: username + '-token'
         }
-      })
-    }
+      })//login返回的是token
+    }//
   }
   return res.status(400).json({
     code: 400,
@@ -88,7 +75,7 @@ export const getUsers = (req: Request, res: Response) => {
   const { name } = req.query
   console.log(name)
   const users = userList.filter(user => {
-    const lowerCaseName = user.name.toLowerCase()
+    const lowerCaseName = user.user_name.toLowerCase()
     return !(name && lowerCaseName.indexOf((name as string).toLowerCase()) < 0)
   })
   return res.json({
@@ -130,7 +117,7 @@ export const getUserInfo = (req: Request, res: Response) => {
 export const getUserByName = (req: Request, res: Response) => {
   const { username } = req.params
   for (const user of userList) {
-    if (user.username === username) {
+    if (user.user_name === username) {
       return res.json({
         code: 200,
         data: {
@@ -149,7 +136,7 @@ export const updateUser = (req: Request, res: Response) => {
   const { username } = req.params
   const { user } = req.body
   for (const v of userList) {
-    if (v.username === username) {
+    if (v.user_name === username) {
       return res.json({
         code: 200,
         data: {

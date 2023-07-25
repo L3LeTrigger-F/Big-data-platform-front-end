@@ -9,32 +9,21 @@ const mockFullContent =
 
 for (let i = 0; i < EvidenceCount; i++) {
   evidenceList.push({
-    id: i,
-    status: faker.random.arrayElement(["published", "draft"]),
-    title: faker.lorem.sentence(6, 10),
-    abstractContent: faker.lorem.sentences(2),
-    fullContent: mockFullContent,
-    sourceURL: faker.internet.url(),
-    imageURL: faker.image.imageUrl(),
-    timestamp: faker.date.past().getTime(),
-    platforms: [
-      faker.random.arrayElement(["a-platform", "b-platform", "c-platform"])
-    ],
-    disableComment: faker.datatype.boolean(),
-    importance: faker.datatype.number({ min: 1, max: 3 }),
-    author: faker.name.findName(),
-    reviewer: faker.name.findName(),
-    type: faker.random.arrayElement(["CN", "US", "JP", "EU"]),
-    pageviews: faker.datatype.number({ min: 300, max: 500 }),
-
-    src_id: faker.datatype.number({ min: 1, max: 3 }),
-    dst_id: faker.datatype.number({ min: 1, max: 3 }),
-    yu: faker.random.arrayElement(["应用层"]),
-    type1: faker.random.arrayElement(["重标识"]),
-    type2: faker.random.arrayElement([" sql语句日志"]),
-    type3: faker.random.arrayElement(["查询"]),
-    name1: faker.name.findName(),
-    result: faker.name.findName()
+    evi_id: i.toString(),
+    evi_time:new Date('2023/5/12'),
+    evi_source:"ope",//操作主体
+    evi_aim:"aim",//操作客体
+    evi_ope:"ope",//操作类型
+    evi_location:"中国武汉",//所在域
+    evi_kind:"ddos",//攻击类型
+    evi_dev_name:"device",//设备名
+    evi_result:"result",//操作结果
+    evi_log_kind:"kind",//日志归属类型
+    evi_process:"12",//调用进程号
+    evi_log_id:"2",//原始日志记录ID
+    evi_alarm_id:"3",//对应警告信息ID
+    evi_standby1:"2",//备用属性1
+    evi_standby2:"2",//备用属性2
   });
 }
 
@@ -42,9 +31,6 @@ export const getEvidences = (req: Request, res: Response) => {
   const { importance, type, title, page = 1, limit = 20, sort } = req.query;
 
   let mockList = evidenceList.filter(item => {
-    if (importance && item.importance !== +importance) return false;
-    if (type && item.type !== type) return false;
-    if (title && item.title.indexOf(title as string) < 0) return false;
     return true;
   });
 
@@ -70,7 +56,7 @@ export const getEvidences = (req: Request, res: Response) => {
 export const getEvidence = (req: Request, res: Response) => {
   const { id } = req.params;
   for (const Evidence of evidenceList) {
-    if (Evidence.id.toString() === id) {
+    if (Evidence.evi_id.toString() === id) {
       return res.json({
         code: 200,
         data: {
@@ -99,7 +85,7 @@ export const updateEvidence = (req: Request, res: Response) => {
   const { id } = req.params;
   const { Evidence } = req.body;
   for (const v of evidenceList) {
-    if (v.id.toString() === id) {
+    if (v.evi_id.toString() === id) {
       return res.json({
         code: 200,
         data: {
@@ -120,16 +106,3 @@ export const deleteEvidence = (req: Request, res: Response) => {
   });
 };
 
-// export const getPageviews = (req: Request, res: Response) => {
-//   return res.json({
-//     code: 200,
-//     data: {
-//       pageviews: [
-//         { key: "PC", pageviews: 1024 },
-//         { key: "Mobile", pageviews: 1024 },
-//         { key: "iOS", pageviews: 1024 },
-//         { key: "Android", pageviews: 1024 }
-//       ]
-//     }
-//   });
-// };

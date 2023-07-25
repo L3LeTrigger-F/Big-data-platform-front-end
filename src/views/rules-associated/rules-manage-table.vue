@@ -61,7 +61,7 @@
           width="180px"
         >
           <template slot-scope="{row}">
-            <span>{{ row.title }}</span>
+            <span>{{ row.relation_name }}</span>
           </template>
         </el-table-column>
       <!-- 对应证据属性 -->
@@ -71,7 +71,7 @@
           label="对应证据属性"
         >
           <template slot-scope="{row}">
-            <span>{{ row.title }}</span>
+            <span>{{ row.evi_attribute }}</span>
           </template>
         </el-table-column>
       <!-- 创建时间 -->
@@ -81,17 +81,17 @@
           width="150"
         >
           <template slot-scope="{row}">
-            <span>{{ row.title }}</span>
+            <span>{{ row.create_time }}</span>
           </template>
         </el-table-column>
         <!-- 状态 -->
         <el-table-column
           align="center"
-          label="创建时间"
+          label="状态"
           width="80"
         >
           <template slot-scope="{row}">
-            <span>{{ row.title }}</span>
+            <span>{{ row.state }}</span>
           </template>
         </el-table-column>
         <!-- 创建者 -->
@@ -101,7 +101,7 @@
           width="100"
         >
           <template slot-scope="{row}">
-            <span>{{ row.title }}</span>
+            <span>{{ row.creator }}</span>
           </template>
         </el-table-column>
       <!-- 弃用时间 -->
@@ -111,7 +111,7 @@
           width="150"
         >
           <template slot-scope="{row}">
-            <span>{{ row.title }}</span>
+            <span>{{ row.delete_time }}</span>
           </template>
         </el-table-column>
     </el-table>
@@ -128,8 +128,8 @@
 
   <script lang="ts">
   import { Component, Vue } from 'vue-property-decorator'
-  import { getArticles } from '@/api/articles'
-  import { IArticleData } from '@/api/types'
+  import { getRules,detailRules,createRules,updateRules, } from '@/api/assosicate_rule'
+  import { RulesAssociatedData } from '@/api/types'
   import Pagination from '@/components/Pagination/index.vue'
 
   @Component({
@@ -139,13 +139,13 @@
     }
   })
   export default class extends Vue {
-    private list: IArticleData[] = []
+    private list: RulesAssociatedData[] = []
     private listLoading = true
     private total = 0
     private listQuery = {
       page_id: 1,
       limit: 20,
-      table_id: 3,
+      table_id: 5,
       title: undefined,
       type: undefined,
       sort: '+id'
@@ -159,20 +159,10 @@
 
     private async getList() {
       this.listLoading = true
-      const { data } = await getArticles(this.listQuery)
+      const { data } = await getRules(this.listQuery)
       const items = data.items
       this.total = data.total
       this.list = data.items
-      // this.list = items.map((v: any) => {
-        //'$set'是Vue.js提供的全局方法，用于为响应式对象添加新的属性
-        //这里就是给当前数组项添加一个名为'edit'的属性，并将其初始值设为‘false’。
-        //这样可以确保新添加的属性也是响应式的，可以触发视图更新。
-        // this.$set(v, 'edit', false) // https://vuejs.org/v2/guide/reactivity.html
-        //这行代码为每个数组项 v 添加了一个名为 originalTitle 的属性，并将 v.title 的值赋给它。这个属性可能在用户点击取消按钮时使用，以保存原始的标题值。
-        // v.originalTitle = v.title // will be used when user click the cancel botton
-        //  return v
-      //  })
-      // Just to simulate the time of the request
       setTimeout(() => {
         this.listLoading = false
       }, 0.5 * 1000)
@@ -182,6 +172,7 @@
       this.listQuery.page_id = 1
       this.getList()
     }
+
   }
   </script>
 

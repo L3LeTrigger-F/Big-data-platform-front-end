@@ -193,6 +193,20 @@ export const asyncRoutes: RouteConfig[] = [
           roles: ["operator"],
           affix: true
         }
+      },
+      {
+        path: "evidence-visit",
+      component: () =>
+        import(
+          /* webpackChunkName: "evidence-visit" */ "@/views/evidence/evidence-visit.vue"
+        ),
+      name: "evidence_visit",
+      meta: {
+        title: "evidence_visit",
+        icon: "example",
+          roles: ["operator"],
+          affix: true
+      }
       }
     ]
   }

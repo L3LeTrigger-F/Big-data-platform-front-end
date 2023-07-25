@@ -2,14 +2,14 @@ import request from '@/utils/request'
 import { DialogData } from './types'
 
 export const defaultDialogsData: DialogData = {
-  id: 0,
-  timestamp: '',
-  dname: '',
-  description: '',
-  kinds: '',
-  level: '',
+  id: '0',
+  timestamp: new Date('2023/5/12'),
+  dname: '1',
+  description: '2',
+  kinds: '3',
+  level: '4',
   no: 0,
-  sname: ''
+  sname: '5'
 }
 
 export const getDialogs = (params: any) =>
@@ -36,6 +36,12 @@ export const deleteDialogs = (params: any) =>
   request({
     url: `/delete`,
     method: 'delete',
+    params
+  })
+  export const detailDialogs = (params: any) =>
+  request({
+    url: '/detail',
+    method: 'get',
     params
   })
 

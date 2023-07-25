@@ -4,7 +4,7 @@
       <el-input
         v-model="listQuery.title"
         :placeholder="$t('evidence.title')"
-        style="width: 200px;"
+        style="width: 300px;"
         class="filter-item"
         @keyup.enter.native="handleFilter"
       >
@@ -60,24 +60,6 @@
       >
         {{ $t('evidence.add') }}
       </el-button>
-      <el-button
-        v-waves
-        :loading="downloadLoading"
-        class="filter-item"
-        type="primary"
-        icon="el-icon-download"
-        @click="handleDownload"
-      >
-        {{ $t('evidence.export') }}
-      </el-button>
-      <el-checkbox
-        v-model="showReviewer"
-        class="filter-item"
-        style="margin-left:15px;"
-        @change="tableKey=tableKey+1"
-      >
-        {{ $t('evidence.reviewer') }}
-      </el-checkbox>
     </div>
  <!--以上都是搜索框的内容  -->
       <!-- 下面是列表展示  -->
@@ -251,55 +233,6 @@
           <!-- <el-tag>{{ row.type | typeFilter }}</el-tag> -->
         </template>
       </el-table-column>
-      <!-- 审核人 -->
-      <el-table-column
-        v-if="showReviewer"
-        :label="$t('evidence.reviewer')"
-        width="110px"
-        align="center"
-      >
-        <template slot-scope="{row}">
-          <span style="color:red;">{{ row.reviewer }}</span>
-        </template>
-      </el-table-column>
-      <!-- 操作 -->
-      <el-table-column
-        :label="$t('evidence.actions')"
-        align="center"
-        width="230"
-        class-name="fixed-width"
-      >
-        <template slot-scope="{row, $index}">
-          <el-button
-            type="primary"
-            size="mini"
-            @click="handleUpdate(row)"
-          >
-            {{ $t('evidence.edit') }}
-          </el-button>
-
-          <el-button
-            v-if="row.status!=='deleted'"
-            size="mini"
-            type="danger"
-            @click="showConfirmDialog"
-          >
-            {{ $t('evidence.delete') }}
-          </el-button>
-          <el-dialog
-            title="确认删除"
-            :visible.sync="confirmDialogVisible"
-            width="30%"
-            @close="handleConfirmDialogClose"
-          >
-              <span>确定要删除该条目吗？</span>
-              <span slot="footer" class="dialog-footer">
-              <el-button @click="handleDelete(row, $index)">确定</el-button>
-              <el-button @click="cancelDelete">取消</el-button>
-      </span>
-    </el-dialog>
-        </template>
-      </el-table-column>
     </el-table>
 
     <pagination
@@ -326,7 +259,7 @@
         style="width: 400px; margin-left:50px;"
       >
 
-        <!-- 评论 -->
+        <!-- 评论 证据id -->
         <el-form-item :label="$t('evidence.id')">
           <el-input
             v-model="tempEvidenceData.id"
@@ -335,7 +268,7 @@
             placeholder="Please input"
           />
         </el-form-item>
-        <!-- 评论 -->
+        <!-- 评论 日志记录时间 -->
         <el-form-item :label="$t('evidence.date')">
           <el-input
             v-model="tempEvidenceData.timestamp"
@@ -344,7 +277,7 @@
             placeholder="Please input"
           />
         </el-form-item>
-        <!-- 评论 -->
+        <!-- 评论 操作主体 -->
         <el-form-item :label="$t('evidence.src_id')">
           <el-input
             v-model="tempEvidenceData.src_id"
@@ -353,7 +286,7 @@
             placeholder="Please input"
           />
         </el-form-item>
-        <!-- 评论 -->
+        <!-- 评论 操作客体 -->
         <el-form-item :label="$t('evidence.dst_id')">
           <el-input
             v-model="tempEvidenceData.dst_id"
@@ -362,7 +295,7 @@
             placeholder="Please input"
           />
         </el-form-item>
-        <!-- 评论 -->
+        <!-- 评论 操作类型 -->
         <el-form-item :label="$t('evidence.type3')">
           <el-input
             v-model="tempEvidenceData.type3"
@@ -371,7 +304,7 @@
             placeholder="Please input"
           />
         </el-form-item>
-        <!-- 评论 -->
+        <!-- 评论 所在域 -->
         <el-form-item :label="$t('evidence.yu')">
           <el-input
             v-model="tempEvidenceData.yu"
@@ -380,7 +313,7 @@
             placeholder="Please input"
           />
         </el-form-item>
-        <!-- 评论 -->
+        <!-- 评论 攻击类型 -->
         <el-form-item :label="$t('evidence.type1')">
           <el-input
             v-model="tempEvidenceData.type1"
@@ -389,7 +322,7 @@
             placeholder="Please input"
           />
         </el-form-item>
-        <!-- 评论 -->
+        <!-- 评论 设备名 -->
         <el-form-item :label="$t('evidence.name')">
           <el-input
             v-model="tempEvidenceData.name1"
@@ -398,7 +331,7 @@
             placeholder="Please input"
           />
         </el-form-item>
-        <!-- 评论 -->
+        <!-- 评论 操作结果 -->
         <el-form-item :label="$t('evidence.result')">
           <el-input
             v-model="tempEvidenceData.result"
@@ -407,7 +340,7 @@
             placeholder="Please input"
           />
         </el-form-item>
-        <!-- 评论 -->
+        <!-- 评论 日志归属类型 -->
         <el-form-item :label="$t('evidence.type2')">
           <el-input
             v-model="tempEvidenceData.type2"
@@ -426,13 +359,34 @@
         </el-button>
         <el-button
           type="primary"
-          @click="dialogStatus==='create'?createData():updateData()"
+          v-if="dialogStatus==='create'"
+          @click="createData()"
         >
           {{ $t('evidence.confirm') }}
         </el-button>
+        <el-button
+          type="primary"
+          v-if="dialogStatus==='update'"
+          @click="updateData()"
+        >
+          {{ $t('evidence.confirm') }}
+        </el-button>
+        <el-button
+          type="primary"
+          v-if="dialogStatus==='details'"
+          @click="handleUpdate(row1)"
+        >
+          {{ $t('evidence.edit') }}
+        </el-button>
+        <el-button
+          type="primary"
+          v-if="dialogStatus==='details'"
+          @click="handleDelete(row1, index1)"
+        >
+          {{ $t('evidence.delete') }}
+        </el-button>
       </div>
     </el-dialog>
-
     <el-dialog
       :visible.sync="dialogPageviewsVisible"
       title="Reading statistics"
@@ -470,7 +424,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { Form } from 'element-ui'
 import { cloneDeep } from 'lodash'
-import { getEvidences, getPageviews, createEvidence, updateEvidence, defaultEvidenceData,deleteEvidence } from '@/api/evidence'
+import { getEvidences, getPageviews, createEvidence, updateEvidence, defaultEvidenceData } from '@/api/evidence'
 import { EvidenceData } from '@/api/types'
 import { exportJson2Excel } from '@/utils/excel'
 import { formatJson } from '@/utils'
@@ -507,7 +461,7 @@ export default class extends Vue {
   private listLoading = true
   private listQuery = {
     page: 1,
-    limit: 20,
+    limit: 10,
     table_id: 4,
     importance: undefined,
     title: undefined,
@@ -521,15 +475,18 @@ export default class extends Vue {
     { label: 'ID Ascending', key: '+id' },
     { label: 'ID Descending', key: '-id' }
   ]
- private confirmDialogVisible=false
-  private dialogStatus = ''
+
   // private statusOptions = ['published', 'draft', 'deleted']
   private showReviewer = false
   private dialogFormVisible = false
+  private dialogStatus = ''
   private textMap = {
     update: 'Edit',
+    details: 'Details',
     create: 'Create'
   }
+  private row1 =''
+  private index1 =0
 
   private dialogPageviewsVisible = false
   private pageviewsData = []
@@ -561,14 +518,7 @@ export default class extends Vue {
     this.listQuery.page = 1
     this.getList()
   }
-    private showConfirmDialog(){
-    this.confirmDialogVisible=true
-  }
-    private handleDelete(row: any, index: number) {
-    deleteEvidence({ tableId: this.listQuery.table_id, itemId: row.id })
-    this.confirmDialogVisible=false
-    this.list.splice(index, 1)
-  }
+
   private handleModifyStatus(row: any, status: string) {
     this.$message({
       message: '操作成功',
@@ -615,7 +565,8 @@ export default class extends Vue {
     (this.$refs.dataForm as Form).validate(async(valid) => {
       if (valid) {
         const EvidenceData = this.tempEvidenceData
-        EvidenceData.evi_id = Math.round(Math.random() * 100) + 1024 // mock a id
+        EvidenceData.id = Math.round(Math.random() * 100) + 1024 // mock a id
+        EvidenceData.author = 'vue-typescript-admin'
         const { data } = await createEvidence({ Evidence: EvidenceData })
         data.Evidence.timestamp = Date.parse(data.Evidence.timestamp)
         this.list.unshift(data.Evidence)
@@ -632,8 +583,21 @@ export default class extends Vue {
 
   private handleUpdate(row: any) {
     this.tempEvidenceData = Object.assign({}, row)
+    this.tempEvidenceData.timestamp = +new Date(this.tempEvidenceData.timestamp)
     this.dialogStatus = 'update'
     this.dialogFormVisible = true
+    this.$nextTick(() => {
+      (this.$refs.dataForm as Form).clearValidate()
+    })
+  }
+
+
+  private handleDetails(row: any, index: number) {
+    this.tempEvidenceData = Object.assign({}, row)
+    this.dialogStatus = 'details'
+    this.dialogFormVisible = true
+    this.row1 = row
+    this.index1 = index
     this.$nextTick(() => {
       (this.$refs.dataForm as Form).clearValidate()
     })
@@ -643,8 +607,9 @@ export default class extends Vue {
     (this.$refs.dataForm as Form).validate(async(valid) => {
       if (valid) {
         const tempData = Object.assign({}, this.tempEvidenceData)
-        const { data } = await updateEvidence(tempData.evi_id, { Evidence: tempData })
-        const index = this.list.findIndex(v => v.evi_id === data.Evidence.id)
+        tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
+        const { data } = await updateEvidence(tempData.id, { Evidence: tempData })
+        const index = this.list.findIndex(v => v.id === data.Evidence.id)
         this.list.splice(index, 1, data.Evidence)
         this.dialogFormVisible = false
         this.$notify({
@@ -657,6 +622,15 @@ export default class extends Vue {
     })
   }
 
+  private handleDelete(row: any, index: number) {
+    this.$notify({
+      title: 'Success',
+      message: 'Delete Successfully',
+      type: 'success',
+      duration: 2000
+    })
+    this.list.splice(index, 1)
+  }
 
   private async handleGetPageviews(pageviews: string) {
     const { data } = await getPageviews({ pageviews })
@@ -671,12 +645,6 @@ export default class extends Vue {
     const data = formatJson(filterVal, this.list)
     exportJson2Excel(tHeader, data, 'table-list')
     this.downloadLoading = false
-  }
-    private async showdialogForm(row:any){
-    this.dialogFormVisible=true
-    this.dialogStatus='update'
-    const { data }=await detailArticles({tableId:this.listQuery.table_id, itemId: row})
-    this.detailData=data.items
   }
 }
 </script>

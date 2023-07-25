@@ -83,38 +83,79 @@
         </template>
       </el-table-column>
 
-      <!-- 显示证据链头-->
+      <!-- 证据头 -->
       <el-table-column
-        :label="$t('table.evi_head')"
-        width="250px"
         align="center"
+        label="证据头"
+        width="420px"
+      >
+      <template slot-scope="{row}">
+          <span>{{ row.head_evidence_id }}</span>
+        </template>
+        </el-table-column>
+    <!-- 证据链 -->
+      <el-table-column
+        width="420px"
+        align="center"
+        label="证据2"
       >
         <template slot-scope="{row}">
-          <span>{{ row.evidence_head_id }}</span>
+          <span>{{ row.evidence2_id }}</span>
         </template>
       </el-table-column>
-
-      <!-- 证据链id -->
+    <!-- 证据尾 -->
       <el-table-column
-        :label="$t('table.evi_id')"
-        min-width="300px"
+        align="center"
+        label="证据3"
+        width="420px"
       >
         <template slot-scope="{row}">
-          <span
-            class="link-type"
-            @click="showdialogForm(row.id)"
-          >{{ row.evidence_id }}</span>
-          <!-- <el-tag>{{ row.type | typeFilter }}</el-tag> -->
+          <span>{{ row.evidence3_id }}</span>
         </template>
       </el-table-column>
-      <!-- 证据链尾 -->
-      <el-table-column
-        :label="$t('table.evi_tail')"
-        width="250px"
+          <el-table-column
         align="center"
+        label="证据4"
+        width="420px"
       >
         <template slot-scope="{row}">
-          <span>{{ row.evidence_tail_id }}</span>
+          <span>{{ row.evidence4_id }}</span>
+        </template>
+      </el-table-column>
+        <el-table-column
+        align="center"
+        label="证据5"
+        width="420px"
+      >
+        <template slot-scope="{row}">
+          <span>{{ row.evidence5_id }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        align="center"
+        label="证据6"
+        width="420px"
+      >
+        <template slot-scope="{row}">
+          <span>{{ row.evidence6_id }}</span>
+        </template>
+      </el-table-column>
+        <el-table-column
+        align="center"
+        label="证据7"
+        width="420px"
+      >
+        <template slot-scope="{row}">
+          <span>{{ row.evidence7_id }}</span>
+        </template>
+      </el-table-column>
+            <el-table-column
+        align="center"
+        label="证据尾"
+        width="420px"
+      >
+        <template slot-scope="{row}">
+          <span>{{ row.tail_evidence_id }}</span>
         </template>
       </el-table-column>
 
@@ -137,7 +178,7 @@
             v-if="row.status!=='deleted'"
             size="mini"
             type="danger"
-            @click="showConfirmDialog"
+            @click="showConfirmDialog()"
           >
             {{ $t('table.delete') }}
           </el-button>
@@ -150,7 +191,7 @@
               <span>确定要删除该条目吗？</span>
               <span slot="footer" class="dialog-footer">
               <el-button @click="handleDelete(row, $index)">确定</el-button>
-              <el-button @click="cancelDelete">取消</el-button>
+              <el-button @click="cancelDelete()">取消</el-button>
       </span>
     </el-dialog>
         </template>
@@ -262,8 +303,6 @@ import { Form } from 'element-ui'
 import { cloneDeep } from 'lodash'
 import { getArticles, getPageviews, createArticle,detailArticles, updateArticle, defaultArticleData, deleteArticle } from '@/api/articles'
 import { EvidenceChainData } from '@/api/types'
-import { exportJson2Excel } from '@/utils/excel'
-import { formatJson } from '@/utils'
 import Pagination from '@/components/Pagination/index.vue'
 
 
@@ -288,7 +327,7 @@ export default class extends Vue {
     page_id: 1,
     limit: 20,
     // importance: undefined,
-    table_id: 4,
+    table_id: 7,
     title: undefined,
     type: undefined,
     sort: '+id'
@@ -300,7 +339,7 @@ export default class extends Vue {
     { label: 'ID Descending', key: '-id' }
   ]
   private confirmDialogVisible=false
-  // private statusOptions = ['published', 'draft', 'deleted']
+
   private showReviewer = false
   private dialogFormVisible = false
   private dialogStatus = ''

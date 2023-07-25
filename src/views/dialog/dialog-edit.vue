@@ -88,7 +88,7 @@
         align="center"
       >
         <template slot-scope="{row}">
-          <span>{{ row.evidence_head_id }}</span>
+          <span>{{ row.timestamp}}</span>
         </template>
       </el-table-column>
       <!-- 日志名-->
@@ -98,7 +98,7 @@
         align="center"
       >
         <template slot-scope="{row}">
-          <span>{{ row.evidence_head_id }}</span>
+          <span>{{ row.dname }}</span>
         </template>
       </el-table-column>
       <!-- 日志描述 -->
@@ -108,7 +108,7 @@
         align="center"
       >
         <template slot-scope="{row}">
-          <span>{{ row.evidence_head_id }}</span>
+          <span>{{ row.description }}</span>
         </template>
       </el-table-column>
       <!-- 日志分类 -->
@@ -118,7 +118,7 @@
         align="center"
       >
         <template slot-scope="{row}">
-          <span>{{ row.evidence_head_id }}</span>
+          <span>{{ row.kinds }}</span>
         </template>
       </el-table-column>
       <!-- 日志等级 -->
@@ -128,7 +128,7 @@
         align="center"
       >
         <template slot-scope="{row}">
-          <span>{{ row.evidence_head_id }}</span>
+          <span>{{ row.level }}</span>
         </template>
       </el-table-column>
       <!-- 设备编号 -->
@@ -138,7 +138,7 @@
         align="center"
       >
         <template slot-scope="{row}">
-          <span>{{ row.evidence_head_id }}</span>
+          <span>{{ row.no }}</span>
         </template>
       </el-table-column>
       <!-- 设备名称 -->
@@ -148,7 +148,7 @@
         align="center"
       >
         <template slot-scope="{row}">
-          <span>{{ row.evidence_head_id }}</span>
+          <span>{{ row.sname }}</span>
         </template>
       </el-table-column>
 
@@ -162,7 +162,7 @@
           <el-button
             type="primary"
             size="mini"
-            @click="handleUpdate(row)"
+            @click="showdialogForm(row.id)"
           >
             {{ $t('table.edit') }}
           </el-button>
@@ -171,18 +171,30 @@
             v-if="row.status!=='deleted'"
             size="mini"
             type="danger"
-            @click="handleDelete(row, $index)"
+            @click="showConfirmDialog()"
           >
             {{ $t('table.delete') }}
           </el-button>
-          <el-button
-            v-if="row.status!=='deleted'"
-            size="mini"
-            type="success"
-            @click="handleDelete(row, $index)"
+          <el-dialog
+            title="确认删除"
+            :visible.sync="confirmDialogVisible"
+            width="30%"
+            @close="handleConfirmDialogClose"
           >
-            {{ $t("查看详情") }}
-          </el-button>
+              <span>确定要删除该条目吗？</span>
+              <span slot="footer" class="dialog-footer">
+              <el-button @click="handleDelete(row, $index)">确定</el-button>
+              <el-button @click="cancelDelete()">取消</el-button>
+      </span>
+    </el-dialog>
+          <!-- <el-button -->
+            <!-- v-if="row.status!=='deleted'" -->
+            <!-- size="mini" -->
+            <!-- type="success" -->
+            <!-- @click="showDialogDescription()" -->
+          <!-- > -->
+            <!-- {{ $t("查看详情") }} -->
+          <!-- </el-button> -->
         </template>
       </el-table-column>
     </el-table>
@@ -210,100 +222,63 @@
         style="width: 400px; margin-left:50px;"
     >
       <!-- 日志名 -->
-        <el-form-item :label="日志名">
-
+        <el-form-item :label="$t('日志名')">
           <el-input
-            v-model="tempDialogsData.evidence_head_id"
+            v-model="tempDialogsData.dname"
+            :autosize="{minRows: 1, maxRows: 1}"
+            type="textarea"
+            placeholder="Please input"
+          />
+        </el-form-item>
+      <!-- 日志时间 -->
+        <el-form-item :label="$t('日志时间')">
+          <el-input
+            v-model="tempDialogsData.timestamp"
             :autosize="{minRows: 1, maxRows: 1}"
             type="textarea"
             placeholder="Please input"
           />
         </el-form-item>
       <!-- 日志描述 -->
-        <el-form-item :label="日志描述">
+        <el-form-item :label="$t('日志描述')">
           <el-input
-            v-model="tempDialogsData.evidence_head_id"
+            v-model="tempDialogsData.description"
             :autosize="{minRows: 1, maxRows: 1}"
             type="textarea"
             placeholder="Please input"
           />
         </el-form-item>
       <!-- 日志分类 -->
-        <el-form-item :label="日志分类">
+        <el-form-item :label="$t('日志分类')">
           <el-input
-            v-model="tempDialogsData.evidence_head_id"
+            v-model="tempDialogsData.kinds"
             :autosize="{minRows: 1, maxRows: 1}"
             type="textarea"
             placeholder="Please input"
           />
         </el-form-item>
       <!-- 日志等级 -->
-        <el-form-item :label="日志等级">
+        <el-form-item :label="$t('日志等级')">
           <el-input
-            v-model="tempDialogsData.evidence_head_id"
+            v-model="tempDialogsData.level"
             :autosize="{minRows: 1, maxRows: 1}"
             type="textarea"
             placeholder="Please input"
           />
         </el-form-item>
       <!-- 设备编号 -->
-        <el-form-item :label="设备编号">
+        <el-form-item :label="$t('设备编号')">
           <el-input
-            v-model="tempDialogsData.evidence_head_id"
+            v-model="tempDialogsData.no"
             :autosize="{minRows: 1, maxRows: 1}"
             type="textarea"
             placeholder="Please input"
           />
         </el-form-item>
       <!-- 设备厂商 -->
-        <el-form-item :label="设备厂商">
+        <el-form-item :label="$t('设备名称')">
           <el-input
-            v-model="tempDialogsData.evidence_head_id"
-            :autosize="{minRows: 1, maxRows: 1}"
-            type="textarea"
-            placeholder="Please input"
-          />
-        </el-form-item>
-      <!-- 产品名 -->
-        <el-form-item :label="产品名">
-          <el-input
-            v-model="tempDialogsData.evidence_head_id"
-            :autosize="{minRows: 1, maxRows: 1}"
-            type="textarea"
-            placeholder="Please input"
-          />
-        </el-form-item>
-      <!-- 产品版本 -->
-        <el-form-item :label="产品版本">
-          <el-input
-            v-model="tempDialogsData.evidence_head_id"
-            :autosize="{minRows: 1, maxRows: 1}"
-            type="textarea"
-            placeholder="Please input"
-          />
-        </el-form-item>
-      <!-- 策略名称 -->
-        <el-form-item :label="策略名称">
-          <el-input
-            v-model="tempDialogsData.evidence_head_id"
-            :autosize="{minRows: 1, maxRows: 1}"
-            type="textarea"
-            placeholder="Please input"
-          />
-        </el-form-item>
-      <!-- 进程-->
-        <el-form-item :label="进程">
-          <el-input
-            v-model="tempDialogsData.evidence_head_id"
-            :autosize="{minRows: 1, maxRows: 1}"
-            type="textarea"
-            placeholder="Please input"
-          />
-        </el-form-item>
-      <!-- 账户名-->
-        <el-form-item :label="账户名">
-          <el-input
-            v-model="tempDialogsData.evidence_head_id"
+            v-model="tempDialogsData.sname"
             :autosize="{minRows: 1, maxRows: 1}"
             type="textarea"
             placeholder="Please input"
@@ -332,7 +307,7 @@
     <el-form
         ref="dataForm"
         :rules="rules"
-        :model="tempDialogsData"
+        :model="detailData"
         label-position="left"
         label-width="100px"
         style="width: 400px; margin-left:50px;"
@@ -340,7 +315,52 @@
       <!-- 日志名 -->
         <el-form-item :label="日志名">
           <el-description
-            v-model="tempDialogsData.evidence_head_id"
+            v-model="detailData.dname"
+            :autosize="{minRows: 1, maxRows: 1}"
+            type="textarea"
+            placeholder="Please input"
+          />
+        </el-form-item>
+      <!-- 日志描述 -->
+        <el-form-item :label="日志描述">
+          <el-description
+            v-model="detailData.dname"
+            :autosize="{minRows: 1, maxRows: 1}"
+            type="textarea"
+            placeholder="Please input"
+          />
+        </el-form-item>
+      <!-- 日志分类 -->
+        <el-form-item :label="日志分类">
+          <el-description
+            v-model="detailData.kinds"
+            :autosize="{minRows: 1, maxRows: 1}"
+            type="textarea"
+            placeholder="Please input"
+          />
+        </el-form-item>
+      <!-- 日志水平 -->
+        <el-form-item :label="日志等级">
+          <el-description
+            v-model="detailData.level"
+            :autosize="{minRows: 1, maxRows: 1}"
+            type="textarea"
+            placeholder="Please input"
+          />
+        </el-form-item>
+      <!-- 设备编号 -->
+        <el-form-item :label="设备编号">
+          <el-description
+            v-model="detailData.no"
+            :autosize="{minRows: 1, maxRows: 1}"
+            type="textarea"
+            placeholder="Please input"
+          />
+        </el-form-item>
+      <!-- 设备名称 -->
+        <el-form-item :label="设备名称">
+          <el-description
+            v-model="detailData.sname"
             :autosize="{minRows: 1, maxRows: 1}"
             type="textarea"
             placeholder="Please input"
@@ -348,26 +368,7 @@
         </el-form-item>
     </el-form>
     </el-dialog>
-      <!-- > -->
-        <!-- <el-table-column -->
-          <!-- prop="key" -->
-          <!-- label="Channel" -->
-        <!-- /> -->
-        <!-- <el-table-column -->
-          <!-- prop="pageviews" -->
-          <!-- label="Pageviews" -->
-        <!-- /> -->
-      <!-- </el-table> -->
-      <!-- <span -->
-        <!-- slot="footer" -->
-        <!-- class="dialog-footer" -->
-      <!-- > -->
-        <!-- <el-button -->
-          <!-- type="primary" -->
-          <!-- @click="dialogPageviewsVisible = false" -->
-        <!-- >{{ $t('table.confirm') }}</el-button> -->
-      <!-- </span> -->
-    <!-- </el-dialog> -->
+
   </div>
 </template>
 
@@ -375,11 +376,11 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { Form } from 'element-ui'
 import { cloneDeep } from 'lodash'
-import { EvidenceChainData } from '@/api/types'
+import { DialogData } from '@/api/types'
 import { exportJson2Excel } from '@/utils/excel'
 import { formatJson } from '@/utils'
 import Pagination from '@/components/Pagination/index.vue'
-import { createDialogs, getDialogs,deleteDialogs,updateDialogs,defaultDialogsData } from '@/api/dialogs'
+import { createDialogs, getDialogs,deleteDialogs,updateDialogs,defaultDialogsData,detailDialogs } from '@/api/dialogs'
 
 const calendarTypeOptions = [
   { key: 'CN', displayName: 'China' },
@@ -407,14 +408,14 @@ const calendarTypeKeyValue = calendarTypeOptions.reduce((acc: { [key: string]: s
 })
 export default class extends Vue {
   private tableKey = 0
-  private list: EvidenceChainData[] = []
+  private list: DialogData[] = []
   private total = 0
   private listLoading = true
   private listQuery = {
     page_id: 1,
     limit: 20,
     // importance: undefined,
-    table_id: 1,
+    table_id: 2,//日志泛化表
     title: undefined,
     type: undefined,
     sort: '+id'
@@ -426,7 +427,7 @@ export default class extends Vue {
     { label: 'ID Ascending', key: '+id' },
     { label: 'ID Descending', key: '-id' }
   ]
-
+  private confirmDialogVisible=false
   // private statusOptions = ['published', 'draft', 'deleted']
   private showReviewer = false
   private dialogFormVisible = false
@@ -447,7 +448,7 @@ export default class extends Vue {
 
   private downloadLoading = false
   private tempDialogsData = defaultDialogsData
-
+  private detailData:any[]=[]
   created() {
     this.getList()
   }
@@ -462,12 +463,22 @@ export default class extends Vue {
       this.listLoading = false
     }, 0.5 * 1000)
   }
-
+    private async showdialogForm(row:any){
+    this.dialogFormVisible=true
+    this.dialogStatus='update'
+    const { data }=await detailDialogs({tableId:this.listQuery.table_id, itemId: row})
+    this.detailData=data.items
+  }
+  private showDialogDescription(){
+    this.dialogDescriptionVisible=true
+  }
   private handleFilter() {
     this.listQuery.page_id = 1
     this.getList()
   }
-
+  private showConfirmDialog(){
+    this.confirmDialogVisible=true
+  }
   private handleModifyStatus(row: any, status: string) {
     this.$message({
       message: '操作成功',
@@ -475,7 +486,11 @@ export default class extends Vue {
     })
     row.status = status
   }
-
+  private handleDelete(row: any, index: number) {
+    deleteDialogs({ tableId: this.listQuery.table_id, itemId: row.id })
+    this.confirmDialogVisible=false
+    this.list.splice(index, 1)
+  }
   private sortChange(data: any) {
     const { prop, order } = data
     if (prop === 'id') {
@@ -514,7 +529,7 @@ export default class extends Vue {
     (this.$refs.dataForm as Form).validate(async(valid) => {
       if (valid) {
         const articleData = this.tempDialogsData
-        articleData.id = Math.round(Math.random() * 100) + 1024 // mock a id
+        articleData.id = "1"// mock a id
         const { data } = await createDialogs({ table_id: this.listQuery.table_id, articleData: this.tempDialogsData })
         this.list.unshift(this.tempDialogsData)
         this.dialogFormVisible = false
@@ -543,30 +558,16 @@ export default class extends Vue {
       if (valid) {
         // this.tempDialogsData=.unshift(data.article)
         const tempData = Object.assign({}, this.tempDialogsData)
+        this.dialogFormVisible = false
         // tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
         const { data } = await updateDialogs({table_ID:this.listQuery.table_id, tempData_ID: this.tempDialogsData.id, article: tempData })
         const index = this.list.findIndex(v => v.id === data.article.id)
         this.list.splice(index, 1, data.article)
-        this.dialogFormVisible = false
-        this.$notify({
-          title: '成功',
-          message: '更新成功',
-          type: 'success',
-          duration: 2000
-        })
       }
     })
   }
-
-  private handleDelete(row: any, index: number) {
-    deleteDialogs({ table_id: this.listQuery.table_id, row_id: row.id })
-    this.$notify({
-      title: 'Success',
-      message: 'Delete Successfully',
-      type: 'success',
-      duration: 2000
-    })
-    this.list.splice(index, 1)
+  private cancelDelete(){
+    this.confirmDialogVisible=false
   }
 }
 </script>

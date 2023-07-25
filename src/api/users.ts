@@ -1,12 +1,13 @@
 import request from '@/utils/request'
 import axios from 'axios'
-export const defaultUsersData:UsersData = {
-  id: 0,
-  name: '',
-  cryptology: '',
-  create_time: '',
-  character: '',
-  action: ''
+import { UsersData } from "./types"
+export const defaultUsersData: UsersData = {
+  user_id: '0',//yonghu id
+  user_name: '',
+  password: '',
+  role:'2',//用户角色
+  address:'',
+  user_data:new Date('2023-07-25T12:34:56Z')
 }
 
 export const getUsers = (params: any) =>

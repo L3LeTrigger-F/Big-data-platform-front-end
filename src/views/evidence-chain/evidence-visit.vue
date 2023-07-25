@@ -29,6 +29,7 @@
     </div>
     <!-- 表格列 -->
     <el-table
+    :key="tableKey"
       v-loading="listLoading"
       :data="list"
       border
@@ -38,9 +39,12 @@
     >
     <!-- 序号 -->
       <el-table-column
+        :label="$t('table.id')"
+        prop="id"
+        sortable="custom"
         align="center"
-        label="ID"
-        width="420px"
+        width="120"
+        :class-name="getSortClass('id')"
       >
         <template slot-scope="{row}">
           <span>{{ row.id }}</span>
@@ -52,28 +56,73 @@
         label="证据头"
         width="420px"
       >
-        <template slot-scope="{row}">
-          <span>{{ row.evidence_head_id }}</span>
+      <template slot-scope="{row}">
+        <span>{{ row.head_evidence_id }}</span>
         </template>
       </el-table-column>
     <!-- 证据链 -->
       <el-table-column
         width="420px"
         align="center"
-        label="证据链"
+        label="证据2"
       >
         <template slot-scope="{row}">
-          <span>{{ row.evidence_id }}</span>
+          <span>{{ row.evidence2_id }}</span>
         </template>
       </el-table-column>
     <!-- 证据尾 -->
       <el-table-column
         align="center"
+        label="证据3"
+        width="420px"
+      >
+        <template slot-scope="{row}">
+          <span>{{ row.evidence3_id }}</span>
+        </template>
+      </el-table-column>
+          <el-table-column
+        align="center"
+        label="证据4"
+        width="420px"
+      >
+        <template slot-scope="{row}">
+          <span>{{ row.evidence4_id }}</span>
+        </template>
+      </el-table-column>
+        <el-table-column
+        align="center"
+        label="证据5"
+        width="420px"
+      >
+        <template slot-scope="{row}">
+          <span>{{ row.evidence5_id }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        align="center"
+        label="证据6"
+        width="420px"
+      >
+        <template slot-scope="{row}">
+          <span>{{ row.evidence6_id }}</span>
+        </template>
+      </el-table-column>
+        <el-table-column
+        align="center"
+        label="证据7"
+        width="420px"
+      >
+        <template slot-scope="{row}">
+          <span>{{ row.evidence7_id }}</span>
+        </template>
+      </el-table-column>
+        <el-table-column
+        align="center"
         label="证据尾"
         width="420px"
       >
         <template slot-scope="{row}">
-          <span>{{ row.evidence_tail_id }}</span>
+          <span>{{ row.tail_evidence_id }}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -100,6 +149,11 @@ import Pagination from '@/components/Pagination/index.vue'
     Pagination
   }
 })
+//这里命名写死了
+//  id:number//id序号
+ // evidence_head_id:number//证据头
+ // evidence_id:number[]//证据链
+//  evidence_tail_id:number//证据尾
 export default class extends Vue {
   private list: EvidenceChainData[] = []
   private listLoading = true
@@ -107,7 +161,7 @@ export default class extends Vue {
   private listQuery = {
     page_id: 1,
     limit: 20,
-    table_id: 4,
+    table_id: 7,
     title: undefined,
     type: undefined,
     sort: '+id'

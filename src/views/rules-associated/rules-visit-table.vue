@@ -103,7 +103,7 @@
           align="center"
         >
           <template slot-scope="{row}">
-            <span>{{ row.title}}</span>
+            <span>{{ row.relation_name}}</span>
           </template>
         </el-table-column>
         <!-- 对应证据属性 -->
@@ -114,12 +114,10 @@
         >
           <template slot-scope="{row}">
             <span
-              class="link-type"
-              @click="handleUpdate(row)"
-            >{{row.title}}</span>
-            <!-- <el-tag>{{ row.type | typeFilter }}</el-tag> -->
+            >{{row.evi_attribute}}</span>
           </template>
         </el-table-column>
+
         <!-- 创建时间 -->
         <el-table-column
           :label="$t('创建时间')"
@@ -127,7 +125,7 @@
           align="center"
         >
           <template slot-scope="{row}">
-            <span>{{ row.title }}</span>
+            <span>{{ row.create_time }}</span>
           </template>
         </el-table-column>
         <!-- 状态 -->
@@ -137,7 +135,7 @@
           align="center"
         >
           <template slot-scope="{row}">
-            <span>{{ row.title }}</span>
+            <span>{{ row.state }}</span>
           </template>
         </el-table-column>
         <!-- 创建者 -->
@@ -147,7 +145,7 @@
           align="center"
         >
           <template slot-scope="{row}">
-            <span>{{ row.title }}</span>
+            <span>{{ row.creator }}</span>
           </template>
         </el-table-column>
         <!-- 弃用时间 -->
@@ -157,7 +155,7 @@
           align="center"
         >
           <template slot-scope="{row}">
-            <span>{{ row.title }}</span>
+            <span>{{ row.delete_time }}</span>
           </template>
         </el-table-column>
         <!-- 动作 -->
@@ -183,13 +181,18 @@
             >
               {{ $t('table.delete') }}
             </el-button>
-            <el-button
-              type="primary"
-              size="mini"
-              @click="handleGetPageviews(row)"
-            >
-              {{ $t('查看详情') }}
-            </el-button>
+            <el-dialog
+            title="确认删除"
+            :visible.sync="confirmDialogVisible"
+            width="30%"
+            @close="handleConfirmDialogClose"
+          >
+              <span>确定要删除该条目吗？</span>
+              <span slot="footer" class="dialog-footer">
+              <el-button @click="handleDelete(row, $index)">确定</el-button>
+              <el-button @click="cancelDelete()">取消</el-button>
+      </span>
+    </el-dialog>
           </template>
         </el-table-column>
       </el-table>
@@ -202,6 +205,7 @@
       />
       <!-- 对话框 -->
       <!-- visible：是否显示 Dialog，支持 .sync 修饰符 -->
+      <!--  -->
       <!--  -->
       <el-dialog
         :title="textMap[dialogStatus]"
@@ -218,7 +222,7 @@
         <!-- 规则名称 -->
           <el-form-item :label="$t('规则名称')">
             <el-input
-              v-model="tempArticleData.title"
+              v-model="tempArticleData.rules_name"
               :autosize="{minRows: 1, maxRows: 1}"
               type="textarea"
               placeholder="Please input"
@@ -227,7 +231,7 @@
           <!-- 对应证据属性 -->
           <el-form-item :label="$t('对应证据属性')">
             <el-input
-              v-model="tempArticleData.title"
+              v-model="tempArticleData.evidence_attr"
               :autosize="{minRows: 1, maxRows: 1}"
               type="textarea"
               placeholder="Please input"
@@ -236,7 +240,7 @@
           <!-- 创建时间 -->
           <el-form-item :label="$t('创建时间')">
             <el-input
-              v-model="tempArticleData.title"
+              v-model="tempArticleData.evidence_time"
               :autosize="{minRows: 1, maxRows: 1}"
               type="textarea"
               placeholder="Please input"
@@ -245,7 +249,7 @@
           <!-- 状态 -->
          <el-form-item :label="$t('状态')">
             <el-input
-              v-model="tempArticleData.title"
+              v-model="tempArticleData.evidence_status"
               :autosize="{minRows: 1, maxRows: 1}"
               type="textarea"
               placeholder="Please input"
@@ -254,7 +258,7 @@
           <!-- 创建者 -->
          <el-form-item :label="$t('创建者')">
             <el-input
-              v-model="tempArticleData.title"
+              v-model="tempArticleData.evidence_creator"
               :autosize="{minRows: 1, maxRows: 1}"
               type="textarea"
               placeholder="Please input"
@@ -263,17 +267,8 @@
           <!-- 弃用时间 -->
           <el-form-item :label="$t('弃用时间')">
             <el-input
-              v-model="tempArticleData.title"
+              v-model="tempArticleData.timestamp"
               :autosize="{minRows: 1, maxRows: 1}"
-              type="textarea"
-              placeholder="Please input"
-            />
-          </el-form-item>
-          <!-- 评论 -->
-          <el-form-item :label="$t('table.remark')">
-            <el-input
-              v-model="tempArticleData.title"
-              :autosize="{minRows: 2, maxRows: 4}"
               type="textarea"
               placeholder="Please input"
             />
@@ -288,7 +283,7 @@
           </el-button>
           <el-button
             type="primary"
-            @click="dialogStatus==='create'?createData():updateData()"
+            @click="dialogStatus=='create'?createData():updateData()"
           >
             {{ $t('table.confirm') }}
           </el-button>
@@ -326,29 +321,26 @@
       </el-dialog>
     </div>
   </template>
-  <script lang="ts">
-  import { Component, Vue } from 'vue-property-decorator'
-  import { Form } from 'element-ui'
-  import { cloneDeep } from 'lodash'
-  import { getArticles, getPageviews, createArticle, updateArticle, defaultArticleData, deleteArticle } from '@/api/articles'
-  import { IArticleData } from '@/api/types'
-  import { exportJson2Excel } from '@/utils/excel'
-  import { formatJson } from '@/utils'
-  import Pagination from '@/components/Pagination/index.vue'
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator'
+import { Form } from 'element-ui'
+import { cloneDeep } from 'lodash'
+import { getRules, getPageviews, createRules, updateRules, defaultRulesAssociatedData, deleteRules } from '@/api/assosicate_rule'
+import { RulesAssociatedData } from '@/api/types'
+import Pagination from '@/components/Pagination/index.vue'
 
-  const calendarTypeOptions = [
-    { key: 'CN', displayName: 'China' },
-    { key: 'US', displayName: 'USA' },
-    { key: 'JP', displayName: 'Japan' },
-    { key: 'EU', displayName: 'Eurozone' }
-  ]
+const calendarTypeOptions = [
+  { key: 'CN', displayName: 'China' },
+  { key: 'US', displayName: 'USA' },
+  { key: 'JP', displayName: 'Japan' },
+  { key: 'EU', displayName: 'Eurozone' }
+]
 
   // arr to obj, such as { CN : "China", US : "USA" }
-  const calendarTypeKeyValue = calendarTypeOptions.reduce((acc: { [key: string]: string }, cur) => {
-    acc[cur.key] = cur.displayName
-    return acc
+const calendarTypeKeyValue = calendarTypeOptions.reduce((acc: { [key: string]: string }, cur) => {
+acc[cur.key] = cur.displayName
+  return acc
   }, {}) as { [key: string]: string }
-
   @Component({
     name: 'rules-manege-table',
     components: {
@@ -362,27 +354,25 @@
   })
   export default class extends Vue {
     private tableKey = 0
-    private list: IArticleData[] = []
+    private list: RulesAssociatedData[] = []
     private total = 0
     private listLoading = true
     private listQuery = {
       page_id: 1,
       limit: 10,
       // importance: undefined,
-      table_id: 4,
+      table_id: 7,
       title: undefined,
       type: undefined,
       sort: '+id'
     }
-
+    private confirmDialogVisible=false
     private importanceOptions = [1, 2, 3]
     private calendarTypeOptions = calendarTypeOptions
     private sortOptions = [
       { label: 'ID Ascending', key: '+id' },
       { label: 'ID Descending', key: '-id' }
     ]
-
-    // private statusOptions = ['published', 'draft', 'deleted']
     private showReviewer = false
     private dialogFormVisible = false
     private dialogStatus = ''
@@ -400,15 +390,15 @@
     }
 
     private downloadLoading = false
-    private tempArticleData = defaultArticleData
-
+    private tempArticleData = defaultRulesAssociatedData
+    private detailData:any[]=[]
     created() {
       this.getList()
     }
 
     private async getList() {
       this.listLoading = true
-      const { data } = await getArticles(this.listQuery)
+      const { data } = await getRules(this.listQuery)
       this.list = data.items
       this.total = data.total
       // Just to simulate the time of the request
@@ -421,7 +411,9 @@
       this.listQuery.page_id = 1
       this.getList()
     }
-
+    private cancelDelete(){
+    this.confirmDialogVisible=false
+  }
     private handleModifyStatus(row: any, status: string) {
       this.$message({
         message: '操作成功',
@@ -445,14 +437,16 @@
       }
       this.handleFilter()
     }
-
+    private showConfirmDialog(){
+    this.confirmDialogVisible=true
+  }
     private getSortClass(key: string) {
       const sort = this.listQuery.sort
       return sort === `+${key}` ? 'ascending' : 'descending'
     }
 
     private resetTempArticleData() {
-      this.tempArticleData = cloneDeep(defaultArticleData)
+      this.tempArticleData = cloneDeep(defaultRulesAssociatedData)
     }
 
     private handleCreate() {
@@ -463,30 +457,23 @@
         (this.$refs.dataForm as Form).clearValidate()
       })
     }
-
     private createData() {
       (this.$refs.dataForm as Form).validate(async(valid) => {
         if (valid) {
           const articleData = this.tempArticleData
-          articleData.id = Math.round(Math.random() * 100) + 1024 // mock a id
-          const { data } = await createArticle({ table_id: this.listQuery.table_id, articleData: this.tempArticleData })
-          this.list.unshift(this.tempArticleData)
           this.dialogFormVisible = false
-          this.$notify({
-            title: '成功',
-            message: '创建成功',
-            type: 'success',
-            duration: 2000
-          })
+          articleData.id = Math.round(Math.random() * 100) + 1024 // mock a id
+          const { data } = await createRules({ table_id: this.listQuery.table_id, articleData: this.tempArticleData })
+          this.list.unshift(this.tempArticleData)
         }
       })
     }
 
     private handleUpdate(row: any) {
       this.tempArticleData = Object.assign({}, row)
+      this.dialogFormVisible = true
       // this.tempArticleData.timestamp = +new Date(this.tempArticleData.timestamp)
       this.dialogStatus = 'update'
-      this.dialogFormVisible = true
       this.$nextTick(() => {
         (this.$refs.dataForm as Form).clearValidate()
       })
@@ -498,7 +485,7 @@
           // this.tempArticleData=.unshift(data.article)
           const tempData = Object.assign({}, this.tempArticleData)
           // tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-          const { data } = await updateArticle({table_ID:this.listQuery.table_id, tempData_ID: this.tempArticleData.id, article: tempData })
+          const { data } = await updateRules({tableId:this.listQuery.table_id, tempId: this.tempArticleData.id, article: tempData })
           const index = this.list.findIndex(v => v.id === data.article.id)
           this.list.splice(index, 1, data.article)
           this.dialogFormVisible = false
@@ -513,13 +500,9 @@
     }
 
     private handleDelete(row: any, index: number) {
-      deleteArticle({ table_id: this.listQuery.table_id, row_id: row.id })
-      this.$notify({
-        title: 'Success',
-        message: 'Delete Successfully',
-        type: 'success',
-        duration: 2000
-      })
+      deleteRules({ tableId: this.listQuery.table_id, itemId: row.id })
+
+      this.confirmDialogVisible=false
       this.list.splice(index, 1)
     }
 

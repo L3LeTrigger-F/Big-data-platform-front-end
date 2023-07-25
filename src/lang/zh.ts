@@ -69,7 +69,8 @@ export default {
     rulesmanage:'关联规则管理',
     rulesvisit:'关联规则查看',
     rules_assiosicated:'关联规则',
-    evidence_edit: "证据管理"
+    evidence_edit: "证据管理",
+    evidence_visit: "证据查看"
   },
   navbar: {
     logOut: '退出登录',
