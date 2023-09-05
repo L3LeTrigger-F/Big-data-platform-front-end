@@ -8,8 +8,8 @@ const mockFullContent = '<p>I am testing data, I am testing data.</p><p><img src
 
 for (let i = 0; i < articleCount; i++) {
   dialogList.push({
-    id: i,
-    timestamp: faker.date.past().getTime(),
+    id: i.toString(),
+    timestamp: new Date('2023/5/12'),
     dname: faker.name.findName(),
     description: faker.lorem.sentences(1),
     kinds: faker.random.arrayElement(['A', 'B', 'C']),
@@ -95,19 +95,5 @@ export const updateDialogs = (req: Request, res: Response) => {
 export const deleteDialogs = (req: Request, res: Response) => {
   return res.json({
     code: 200
-  })
-}
-
-export const getPageviews = (req: Request, res: Response) => {
-  return res.json({
-    code: 200,
-    data: {
-      pageviews: [
-        { key: 'PC', pageviews: 1024 },
-        { key: 'Mobile', pageviews: 1024 },
-        { key: 'iOS', pageviews: 1024 },
-        { key: 'Android', pageviews: 1024 }
-      ]
-    }
   })
 }

@@ -148,12 +148,15 @@ export default class extends Vue {
 .title-style{
   font-size: 25px;
   //color: #151617;
-  color:#020a2a;
   padding: 10px;
-  font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif
+  font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  background-color:	#011f3b;
+  color:#fff;
+  padding: 20px;
+  text-align: center;
+}
   //font-family:Arial,Helvetica,sans-serif;
   //font-size:100%;
-}
 .navbar {
   height: 120px;
   overflow: hidden;
@@ -174,7 +177,6 @@ export default class extends Vue {
       background: rgba(0, 0, 0, .025)
     }
   }
-
   .breadcrumb-container {
     float: left;
   }

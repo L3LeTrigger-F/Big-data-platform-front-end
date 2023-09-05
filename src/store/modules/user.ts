@@ -81,7 +81,7 @@ class User extends VuexModule implements IUserState {
       throw Error('GetUserInfo: token is undefined!')
     }
     // 这里应该是需要改
-    const { data } = await getUserInfo({ /* Your params here */ })
+    const { data } = await getUserInfo({ })
     console.log(data)
     if (!data) {
       throw Error('Verification failed, please Login again.')
@@ -92,10 +92,14 @@ class User extends VuexModule implements IUserState {
       throw Error('GetUserInfo: roles must be a non-null array!')
     }
     this.SET_ROLES(roles)
-    this.SET_NAME(name)
+    this.SET_NAME("steve")
     this.SET_AVATAR(avatar)
     this.SET_INTRODUCTION(introduction)
     this.SET_EMAIL(email)
+    // this.SET_NAME(name)
+    // this.SET_AVATAR(avatar)
+    // this.SET_INTRODUCTION(introduction)
+    // this.SET_EMAIL(email)
   }
 
   @Action

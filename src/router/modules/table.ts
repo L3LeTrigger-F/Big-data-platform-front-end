@@ -2,41 +2,39 @@ import { RouteConfig } from 'vue-router'
 import Layout from '@/layout/index.vue'
 
 const tableRoutes: RouteConfig = {
-  path: '/table',
+  path: '/evidence-chain',
   component: Layout,
-  redirect: '/table/evidence-edit',
+  redirect: '/evidence-chain/evidence-visit',
   name: 'Table',
   meta: {
     title: 'table',
-    icon: 'table'
+    icon: 'table',
+    affix: true,
+    roles: ['operator','auditor']
   },
   children: [
-    /*
     {
-      path: 'dynamic-table',
-      component: () => import(/* webpackChunkName: "dynamic-table" */ /* '@/views/table/dynamic-table/index.vue'),
-      name: 'DynamicTable',
-      meta: { title: 'dynamicTable' }
-    },
-    {
-      path: 'draggable-table',
-      component: () => import(/* webpackChunkName: "draggable-table" */ /* '@/views/table/draggable-table.vue'),
-      name: 'DraggableTable',
-      meta: { title: 'draggableTable' }
-    },
-        */
-    {
-      path: 'inline-edit-table',
-      component: () => import(/* webpackChunkName: "inline-edit-table" */ '@/views/table/evidence-visit.vue'),
+      path: 'evidence-visit',
+      component: () => import(/* webpackChunkName: "inline-edit-table" */ '@/views/evidence-chain/evidence-visit.vue'),
       name: 'InlineEditTable',
-      meta: { title: 'inlineEditTable' }
+      meta: {
+        icon: 'table',
+        title: 'inlineEditTable',
+        affix:true,
+        roles: ['operator','auditor']
+      }
     },
 
     {
-      path: 'complex-table',
-      component: () => import(/* webpackChunkName: "complex-table" */ '@/views/table/evidence-edit.vue'),
+      path: 'evidence-edit',
+      component: () => import(/* webpackChunkName: "complex-table" */ '@/views/evidence-chain/evidence-edit.vue'),
       name: 'ComplexTable',
-      meta: { title: 'complexTable' }
+      meta: { title: 'complexTable' ,
+      icon: "example",
+      roles: ['operator'],
+      affix:true
+    },
+
     }
   ]
 }

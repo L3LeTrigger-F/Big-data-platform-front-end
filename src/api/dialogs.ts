@@ -2,54 +2,47 @@ import request from '@/utils/request'
 import { DialogData } from './types'
 
 export const defaultDialogsData: DialogData = {
-  id: 0,
-  timestamp: '',
-  dname: '',
-  description: '',
-  kinds: '',
-  level: '',
+  id: '0',
+  timestamp: new Date('2023/5/12'),
+  dname: '1',
+  description: '2',
+  kinds: '3',
+  level: '4',
   no: 0,
-  sname: ''
+  sname: '5'
 }
 
 export const getDialogs = (params: any) =>
   request({
-    url: '/dialogs',
+    url: '/show',
     method: 'get',
     params
   })
 
 export const createDialogs = (params: any) =>
   request({
-    url: '/dialogs',
+    url: '/new',
     method: 'post',
     params
   })
-export const getArticle = (id: number, params: any) =>
+export const updateDialogs = (params: any) =>
   request({
-    url: `/articles/${id}`,
+    url: `/modify`,
+    method: 'put',
+    params
+  })
+
+export const deleteDialogs = (params: any) =>
+  request({
+    url: `/delete`,
+    method: 'delete',
+    params
+  })
+  export const detailDialogs = (params: any) =>
+  request({
+    url: '/detail',
     method: 'get',
     params
-  })
-
-export const createArticle = (data: any) =>
-  request({
-    url: '/articles',
-    method: 'post',
-    data
-  })
-
-export const updateDialogs = (id: number, data: any) =>
-  request({
-    url: `/dialogs/${id}`,
-    method: 'put',
-    data
-  })
-
-export const deleteArticle = (id: number) =>
-  request({
-    url: `/articles/${id}`,
-    method: 'delete'
   })
 
 export const getPageviews = (params: any) =>

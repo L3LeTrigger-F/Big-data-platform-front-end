@@ -1,38 +1,30 @@
 import faker, { fake } from 'faker'
 import { Response, Request } from 'express'
-import { EvidenceChainData,DialogData } from '../src/api/types'
+import { EvidenceChainData } from '../src/api/types'
 
-const articleList: EvidenceChainData[] = []
-const dialogList:DialogData[]=[]
+const evidenceList: EvidenceChainData[] = []
 const articleCount = 100
 const mockFullContent = '<p>I am testing data, I am testing data.</p><p><img src="https://wpimg.wallstcn.com/4c69009c-0fd4-4153-b112-6cb53d1cf943"></p>'
 
 for (let i = 0; i < articleCount; i++) {
-  articleList.push({
-    id:i,
-    evidence_head_id:i,
-    evidence_id:[1,2,3],
-    evidence_tail_id:faker.datatype.number({ min: 300, max: 500 })
+  evidenceList.push({
+    id:i.toString(),
+    head_evidence_id:"head",//起始证据id
+    evidence2_id:"1",
+    evidence3_id:"2",
+    evidence4_id:"3",
+    evidence5_id:"4",
+    evidence6_id:"5",
+    evidence7_id:"6",
+    tail_evidence_id:"tail"
   })
 }
 
-for (let i = 0; i < articleCount; i++) {
-  dialogList.push({
-    id: i,
-    timestamp: faker.date.past().getTime(),
-    dname: faker.name.findName(),
-    description: faker.lorem.sentences(1),
-    kinds: faker.random.arrayElement(['A', 'B', 'C']),
-    level: faker.random.arrayElement(['A', 'B', 'C']),
-    no: i,
-    sname: faker.name.findName()
-  })
-}
 
 export const getArticles = (req: Request, res: Response) => {
   const { importance, type, title, page = 1, limit = 20, sort } = req.query
 
-  let mockList = articleList.filter(item => {
+  let mockList = evidenceList.filter(item => {
     // if (importance && item.importance !== +importance) return false
     // if (type && item.type !== type) return false
     // if (title && item.title.indexOf(title as string) < 0) return false
@@ -56,7 +48,7 @@ export const getArticles = (req: Request, res: Response) => {
 
 export const getArticle = (req: Request, res: Response) => {
   const { id } = req.params
-  for (const article of articleList) {
+  for (const article of evidenceList) {
     if (article.id.toString() === id) {
       return res.json({
         code: 200,
@@ -85,7 +77,7 @@ export const createArticle = (req: Request, res: Response) => {
 export const updateArticle = (req: Request, res: Response) => {
   const { id } = req.params
   const { article } = req.body
-  for (const v of articleList) {
+  for (const v of evidenceList) {
     if (v.id.toString() === id) {
       return res.json({
         code: 200,

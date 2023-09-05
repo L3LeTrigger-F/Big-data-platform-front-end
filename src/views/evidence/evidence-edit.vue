@@ -3,21 +3,21 @@
     <div class="filter-container">
       <el-input
         v-model="listQuery.title"
-        :placeholder="$t('table.title')"
+        :placeholder="$t('evidence.title')"
         style="width: 200px;"
         class="filter-item"
         @keyup.enter.native="handleFilter"
-      />
+      >
         <el-option
           v-for="item in importanceOptions"
           :key="item"
           :label="item"
           :value="item"
         />
-      </el-select>
+      </el-input>
       <el-select
         v-model="listQuery.type"
-        :placeholder="$t('table.type')"
+        :placeholder="$t('evidence.type')"
         clearable
         class="filter-item"
         style="width: 130px"
@@ -49,7 +49,7 @@
         icon="el-icon-search"
         @click="handleFilter"
       >
-        {{ $t('table.search') }}
+        {{ $t('evidence.search') }}
       </el-button>
       <el-button
         class="filter-item"
@@ -58,7 +58,7 @@
         icon="el-icon-edit"
         @click="handleCreate"
       >
-        {{ $t('table.add') }}
+        {{ $t('evidence.add') }}
       </el-button>
       <el-button
         v-waves
@@ -68,7 +68,7 @@
         icon="el-icon-download"
         @click="handleDownload"
       >
-        {{ $t('table.export') }}
+        {{ $t('evidence.export') }}
       </el-button>
       <el-checkbox
         v-model="showReviewer"
@@ -76,7 +76,7 @@
         style="margin-left:15px;"
         @change="tableKey=tableKey+1"
       >
-        {{ $t('table.reviewer') }}
+        {{ $t('evidence.reviewer') }}
       </el-checkbox>
     </div>
  <!--以上都是搜索框的内容  -->
@@ -99,7 +99,7 @@
     >
       <!-- id -->
       <el-table-column
-        :label="$t('table.id')"
+        :label="$t('evidence.id')"
         prop="id"
         sortable="custom"
         align="center"
@@ -107,85 +107,154 @@
         :class-name="getSortClass('id')"
       >
         <template slot-scope="{row}">
-          <span>{{ row.id }}</span>
+          <span>{{ row.evi_id }}</span>
         </template>
       </el-table-column>
       <!-- 日志记录时间 -->
       <el-table-column
-        :label="$t('table.date')"
-        width="180px"
+        :label="$t('evidence.date')"
+        width="150px"
         align="center"
       >
         <template slot-scope="{row}">
-          <span>{{ row.timestamp | parseTime }}</span>
+          <span>{{ row.evi_time }}</span>
         </template>
       </el-table-column>
-      <!-- 日志名 -->
+      <!-- 操作主体 -->
       <el-table-column
-        :label="$t('table.title')"
-        min-width="150px"
+        :label="$t('evidence.src_id')"
+        min-width="120px"
       >
         <template slot-scope="{row}">
-          <span>{{ row.title }}</span>
+          <span>{{ row.source }}</span>
           <!-- <el-tag>{{ row.type | typeFilter }}</el-tag> -->
         </template>
       </el-table-column>
 
-      <!-- 日志描述 -->
+      <!-- 操作客体 -->
       <el-table-column
-        :label="$t('table.title')"
-        min-width="150px"
+        :label="$t('evidence.dst_id')"
+        min-width="120px"
       >
         <template slot-scope="{row}">
-          <span>{{ row.title }}</span>
+          <span>{{ row.aim }}</span>
           <!-- <el-tag>{{ row.type | typeFilter }}</el-tag> -->
         </template>
       </el-table-column>
-      <!-- 日志分类 -->
+      <!-- 操作类型 -->
       <el-table-column
-        :label="$t('table.title')"
-        min-width="150px"
+        :label="$t('evidence.type3')"
+        min-width="120px"
       >
         <template slot-scope="{row}">
-          <span>{{ row.title }}</span>
+          <span>{{ row.ope}}</span>
           <!-- <el-tag>{{ row.type | typeFilter }}</el-tag> -->
         </template>
       </el-table-column>
-      <!-- 日志等级 -->
+      <!-- 所在域 -->
       <el-table-column
-        :label="$t('table.title')"
-        min-width="150px"
+        :label="$t('evidence.yu')"
+        min-width="120px"
       >
         <template slot-scope="{row}">
-          <span>{{ row.title }}</span>
+          <span>{{ row.location}}</span>
           <!-- <el-tag>{{ row.type | typeFilter }}</el-tag> -->
         </template>
       </el-table-column>
-      <!-- 设备编号 -->
+      <!-- 攻击类型 -->
       <el-table-column
-        :label="$t('table.title')"
-        min-width="150px"
+        :label="$t('evidence.type1')"
+        min-width="120px"
       >
         <template slot-scope="{row}">
-          <span>{{ row.title }}</span>
+          <span>{{ row.kind }}</span>
           <!-- <el-tag>{{ row.type | typeFilter }}</el-tag> -->
         </template>
       </el-table-column>
-      <!-- 设备名称 -->
+      <!-- 设备名 -->
       <el-table-column
-        :label="$t('table.author')"
-        width="180px"
+        :label="$t('evidence.name')"
+        width="120px"
         align="center"
       >
         <template slot-scope="{row}">
-          <span>{{ row.author }}</span>
+          <span>{{ row.dev_name }}</span>
         </template>
       </el-table-column>
-
+      <!-- 操作结果 -->
+      <el-table-column
+        :label="$t('evidence.result')"
+        min-width="120px"
+      >
+        <template slot-scope="{row}">
+          <span>{{ row.evi_result }}</span>
+          <!-- <el-tag>{{ row.type | typeFilter }}</el-tag> -->
+        </template>
+      </el-table-column>
+      <!-- 日志归属类型 -->
+      <el-table-column
+        :label="$t('evidence.type2')"
+        min-width="150px"
+      >
+        <template slot-scope="{row}">
+          <span>{{ row.log_kind }}</span>
+          <!-- <el-tag>{{ row.type | typeFilter }}</el-tag> -->
+        </template>
+      </el-table-column>
+      <!-- 调用进程号-->
+      <el-table-column
+        :label="$t('调用进程号')"
+        min-width="150px"
+      >
+        <template slot-scope="{row}">
+          <span>{{ row.evi_process }}</span>
+          <!-- <el-tag>{{ row.type | typeFilter }}</el-tag> -->
+        </template>
+      </el-table-column>
+      <!-- 原始日志记录ID -->
+      <el-table-column
+        :label="$t('原始日志记录ID')"
+        min-width="150px"
+      >
+        <template slot-scope="{row}">
+          <span>{{ row.evi_log_id }}</span>
+          <!-- <el-tag>{{ row.type | typeFilter }}</el-tag> -->
+        </template>
+      </el-table-column>
+      <!-- 对应警告信息ID -->
+      <el-table-column
+        :label="$t('对应警告信息ID')"
+        min-width="150px"
+      >
+        <template slot-scope="{row}">
+          <span>{{ row.evi_alarm_id }}</span>
+          <!-- <el-tag>{{ row.type | typeFilter }}</el-tag> -->
+        </template>
+      </el-table-column>
+      <!-- 备用属性1 -->
+      <el-table-column
+        :label="$t('备用属性1')"
+        min-width="150px"
+      >
+        <template slot-scope="{row}">
+          <span>{{ row.evi_standby1 }}</span>
+          <!-- <el-tag>{{ row.type | typeFilter }}</el-tag> -->
+        </template>
+      </el-table-column>
+        <!--  备用属性2-->
+      <el-table-column
+        :label="$t('备用属性2')"
+        min-width="150px"
+      >
+        <template slot-scope="{row}">
+          <span>{{ row.evi_standby2 }}</span>
+          <!-- <el-tag>{{ row.type | typeFilter }}</el-tag> -->
+        </template>
+      </el-table-column>
       <!-- 审核人 -->
       <el-table-column
         v-if="showReviewer"
-        :label="$t('table.reviewer')"
+        :label="$t('evidence.reviewer')"
         width="110px"
         align="center"
       >
@@ -193,48 +262,9 @@
           <span style="color:red;">{{ row.reviewer }}</span>
         </template>
       </el-table-column>
-      <!-- 重要性 -->
-      <!-- <el-table-column -->
-        <!-- :label="$t('table.importance')" -->
-        <!-- width="105px" -->
-      <!-- > -->
-        <!-- <template slot-scope="{row}"> -->
-          <!-- <svg-icon -->
-            <!-- v-for="n in +row.importance" -->
-            <!-- :key="n" -->
-            <!-- name="star" -->
-            <!-- class="meta-item__icon" -->
-          <!-- /> -->
-        <!-- </template> -->
-      <!-- </el-table-column> -->
-      <!-- <el-table-column -->
-        <!-- :label="$t('table.readings')" -->
-        <!-- align="center" -->
-        <!-- width="95" -->
-      <!-- > -->
-        <!-- <template slot-scope="{row}"> -->
-          <!-- <span -->
-            <!-- v-if="row.pageviews" -->
-            <!-- class="link-type" -->
-            <!-- @click="handleGetPageviews(row.pageviews)" -->
-          <!-- >{{ row.pageviews }}</span> -->
-          <!-- <span v-else>0</span> -->
-        <!-- </template> -->
-      <!-- </el-table-column> -->
-      <!-- <el-table-column -->
-        <!-- :label="$t('table.status')" -->
-        <!-- class-name="status-col" -->
-        <!-- width="100" -->
-      <!-- > -->
-        <!-- <template slot-scope="{row}"> -->
-          <!-- <el-tag :type="row.status | articleStatusFilter"> -->
-            <!-- {{ row.status }} -->
-          <!-- </el-tag> -->
-        <!-- </template> -->
-      <!-- </el-table-column> -->
       <!-- 操作 -->
       <el-table-column
-        :label="$t('table.actions')"
+        :label="$t('evidence.actions')"
         align="center"
         width="230"
         class-name="fixed-width"
@@ -245,17 +275,29 @@
             size="mini"
             @click="handleUpdate(row)"
           >
-            {{ $t('table.edit') }}
+            {{ $t('evidence.edit') }}
           </el-button>
 
           <el-button
             v-if="row.status!=='deleted'"
             size="mini"
             type="danger"
-            @click="handleDelete(row, $index)"
+            @click="showConfirmDialog"
           >
-            {{ $t('table.delete') }}
+            {{ $t('evidence.delete') }}
           </el-button>
+          <el-dialog
+            title="确认删除"
+            :visible.sync="confirmDialogVisible"
+            width="30%"
+            @close="handleConfirmDialogClose"
+          >
+              <span>确定要删除该条目吗？</span>
+              <span slot="footer" class="dialog-footer">
+              <el-button @click="handleDelete(row, $index)">确定</el-button>
+              <el-button @click="cancelDelete">取消</el-button>
+      </span>
+    </el-dialog>
         </template>
       </el-table-column>
     </el-table>
@@ -278,34 +320,98 @@
       <el-form
         ref="dataForm"
         :rules="rules"
-        :model="tempArticleData"
+        :model="tempEvidenceData"
         label-position="left"
         label-width="100px"
         style="width: 400px; margin-left:50px;"
       >
-        <!-- 证据链头 -->
-      <el-form-item :label="$t('table.remark')">
-        <el-input
-            v-model="tempArticleData.abstractContent"
-            :autosize="{minRows: 1, maxRows: 1}"
-            type="textarea"
-            placeholder="Please input"
-          />
-        </el-form-item>
-        <!-- 证据链尾 -->
-        <el-form-item :label="$t('table.remark')">
+
+        <!-- 评论 -->
+        <el-form-item :label="$t('evidence.id')">
           <el-input
-            v-model="tempArticleData.abstractContent"
+            v-model="tempEvidenceData.id"
             :autosize="{minRows: 1, maxRows: 1}"
             type="textarea"
             placeholder="Please input"
           />
         </el-form-item>
         <!-- 评论 -->
-        <el-form-item :label="$t('table.remark')">
+        <el-form-item :label="$t('evidence.date')">
           <el-input
-            v-model="tempArticleData.abstractContent"
-            :autosize="{minRows: 2, maxRows: 4}"
+            v-model="tempEvidenceData.timestamp"
+            :autosize="{minRows: 1, maxRows: 1}"
+            type="textarea"
+            placeholder="Please input"
+          />
+        </el-form-item>
+        <!-- 评论 -->
+        <el-form-item :label="$t('evidence.src_id')">
+          <el-input
+            v-model="tempEvidenceData.src_id"
+            :autosize="{minRows: 1, maxRows: 1}"
+            type="textarea"
+            placeholder="Please input"
+          />
+        </el-form-item>
+        <!-- 评论 -->
+        <el-form-item :label="$t('evidence.dst_id')">
+          <el-input
+            v-model="tempEvidenceData.dst_id"
+            :autosize="{minRows: 1, maxRows: 1}"
+            type="textarea"
+            placeholder="Please input"
+          />
+        </el-form-item>
+        <!-- 评论 -->
+        <el-form-item :label="$t('evidence.type3')">
+          <el-input
+            v-model="tempEvidenceData.type3"
+            :autosize="{minRows: 1, maxRows: 1}"
+            type="textarea"
+            placeholder="Please input"
+          />
+        </el-form-item>
+        <!-- 评论 -->
+        <el-form-item :label="$t('evidence.yu')">
+          <el-input
+            v-model="tempEvidenceData.yu"
+            :autosize="{minRows: 1, maxRows: 1}"
+            type="textarea"
+            placeholder="Please input"
+          />
+        </el-form-item>
+        <!-- 评论 -->
+        <el-form-item :label="$t('evidence.type1')">
+          <el-input
+            v-model="tempEvidenceData.type1"
+            :autosize="{minRows: 1, maxRows: 1}"
+            type="textarea"
+            placeholder="Please input"
+          />
+        </el-form-item>
+        <!-- 评论 -->
+        <el-form-item :label="$t('evidence.name')">
+          <el-input
+            v-model="tempEvidenceData.name1"
+            :autosize="{minRows: 1, maxRows: 1}"
+            type="textarea"
+            placeholder="Please input"
+          />
+        </el-form-item>
+        <!-- 评论 -->
+        <el-form-item :label="$t('evidence.result')">
+          <el-input
+            v-model="tempEvidenceData.result"
+            :autosize="{minRows: 1, maxRows: 1}"
+            type="textarea"
+            placeholder="Please input"
+          />
+        </el-form-item>
+        <!-- 评论 -->
+        <el-form-item :label="$t('evidence.type2')">
+          <el-input
+            v-model="tempEvidenceData.type2"
+            :autosize="{minRows: 1, maxRows: 1}"
             type="textarea"
             placeholder="Please input"
           />
@@ -316,13 +422,13 @@
         class="dialog-footer"
       >
         <el-button @click="dialogFormVisible = false">
-          {{ $t('table.cancel') }}
+          {{ $t('evidence.cancel') }}
         </el-button>
         <el-button
           type="primary"
           @click="dialogStatus==='create'?createData():updateData()"
         >
-          {{ $t('table.confirm') }}
+          {{ $t('evidence.confirm') }}
         </el-button>
       </div>
     </el-dialog>
@@ -354,7 +460,7 @@
         <el-button
           type="primary"
           @click="dialogPageviewsVisible = false"
-        >{{ $t('table.confirm') }}</el-button>
+        >{{ $t('evidence.confirm') }}</el-button>
       </span>
     </el-dialog>
   </div>
@@ -364,8 +470,8 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { Form } from 'element-ui'
 import { cloneDeep } from 'lodash'
-import { getArticles, getPageviews, createArticle, updateArticle, defaultArticleData } from '@/api/articles'
-import { EvidenceChainData } from '@/api/types'
+import { getEvidences, getPageviews, createEvidence, updateEvidence, defaultEvidenceData,deleteEvidence } from '@/api/evidence'
+import { EvidenceData } from '@/api/types'
 import { exportJson2Excel } from '@/utils/excel'
 import { formatJson } from '@/utils'
 import Pagination from '@/components/Pagination/index.vue'
@@ -396,12 +502,13 @@ const calendarTypeKeyValue = calendarTypeOptions.reduce((acc: { [key: string]: s
 })
 export default class extends Vue {
   private tableKey = 0
-  private list: EvidenceChainData[] = []
+  private list: EvidenceData[] = []
   private total = 0
   private listLoading = true
   private listQuery = {
     page: 1,
     limit: 20,
+    table_id: 4,
     importance: undefined,
     title: undefined,
     type: undefined,
@@ -414,11 +521,11 @@ export default class extends Vue {
     { label: 'ID Ascending', key: '+id' },
     { label: 'ID Descending', key: '-id' }
   ]
-
+ private confirmDialogVisible=false
+  private dialogStatus = ''
   // private statusOptions = ['published', 'draft', 'deleted']
   private showReviewer = false
   private dialogFormVisible = false
-  private dialogStatus = ''
   private textMap = {
     update: 'Edit',
     create: 'Create'
@@ -433,7 +540,7 @@ export default class extends Vue {
   }
 
   private downloadLoading = false
-  private tempArticleData = defaultArticleData
+  private tempEvidenceData = defaultEvidenceData
 
   created() {
     this.getList()
@@ -441,7 +548,7 @@ export default class extends Vue {
 
   private async getList() {
     this.listLoading = true
-    const { data } = await getArticles(this.listQuery)
+    const { data } = await getEvidences(this.listQuery)
     this.list = data.items
     this.total = data.total
     // Just to simulate the time of the request
@@ -454,7 +561,14 @@ export default class extends Vue {
     this.listQuery.page = 1
     this.getList()
   }
-
+    private showConfirmDialog(){
+    this.confirmDialogVisible=true
+  }
+    private handleDelete(row: any, index: number) {
+    deleteEvidence({ tableId: this.listQuery.table_id, itemId: row.id })
+    this.confirmDialogVisible=false
+    this.list.splice(index, 1)
+  }
   private handleModifyStatus(row: any, status: string) {
     this.$message({
       message: '操作成功',
@@ -484,12 +598,12 @@ export default class extends Vue {
     return sort === `+${key}` ? 'ascending' : 'descending'
   }
 
-  private resetTempArticleData() {
-    this.tempArticleData = cloneDeep(defaultArticleData)
+  private resetTempEvidenceData() {
+    this.tempEvidenceData = cloneDeep(defaultEvidenceData)
   }
 
   private handleCreate() {
-    this.resetTempArticleData()
+    this.resetTempEvidenceData()
     this.dialogStatus = 'create'
     this.dialogFormVisible = true
     this.$nextTick(() => {
@@ -500,11 +614,11 @@ export default class extends Vue {
   private createData() {
     (this.$refs.dataForm as Form).validate(async(valid) => {
       if (valid) {
-        const articleData = this.tempArticleData
-        articleData.id = Math.round(Math.random() * 100) + 1024 // mock a id
-        // articleData.author = 'vue-typescript-admin'
-        const { data } = await createArticle({ article: articleData })
-        this.list.unshift(data.article)
+        const EvidenceData = this.tempEvidenceData
+        EvidenceData.evi_id = Math.round(Math.random() * 100) + 1024 // mock a id
+        const { data } = await createEvidence({ Evidence: EvidenceData })
+        data.Evidence.timestamp = Date.parse(data.Evidence.timestamp)
+        this.list.unshift(data.Evidence)
         this.dialogFormVisible = false
         this.$notify({
           title: '成功',
@@ -517,8 +631,7 @@ export default class extends Vue {
   }
 
   private handleUpdate(row: any) {
-    this.tempArticleData = Object.assign({}, row)
-    // this.tempArticleData.timestamp = +new Date(this.tempArticleData.timestamp)
+    this.tempEvidenceData = Object.assign({}, row)
     this.dialogStatus = 'update'
     this.dialogFormVisible = true
     this.$nextTick(() => {
@@ -529,11 +642,10 @@ export default class extends Vue {
   private updateData() {
     (this.$refs.dataForm as Form).validate(async(valid) => {
       if (valid) {
-        const tempData = Object.assign({}, this.tempArticleData)
-        // tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-        const {data} = await updateArticle({temp_ID:tempData.id,article:tempData})
-        const index = this.list.findIndex(v => v.id === data.article.id)
-        this.list.splice(index, 1, data.article)
+        const tempData = Object.assign({}, this.tempEvidenceData)
+        const { data } = await updateEvidence(tempData.evi_id, { Evidence: tempData })
+        const index = this.list.findIndex(v => v.evi_id === data.Evidence.id)
+        this.list.splice(index, 1, data.Evidence)
         this.dialogFormVisible = false
         this.$notify({
           title: '成功',
@@ -545,15 +657,6 @@ export default class extends Vue {
     })
   }
 
-  private handleDelete(row: any, index: number) {
-    this.$notify({
-      title: 'Success',
-      message: 'Delete Successfully',
-      type: 'success',
-      duration: 2000
-    })
-    this.list.splice(index, 1)
-  }
 
   private async handleGetPageviews(pageviews: string) {
     const { data } = await getPageviews({ pageviews })
@@ -568,6 +671,12 @@ export default class extends Vue {
     const data = formatJson(filterVal, this.list)
     exportJson2Excel(tHeader, data, 'table-list')
     this.downloadLoading = false
+  }
+    private async showdialogForm(row:any){
+    this.dialogFormVisible=true
+    this.dialogStatus='update'
+    const { data }=await detailArticles({tableId:this.listQuery.table_id, itemId: row})
+    this.detailData=data.items
   }
 }
 </script>

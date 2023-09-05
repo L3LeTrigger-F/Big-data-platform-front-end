@@ -3,29 +3,14 @@ import { Message, MessageBox } from 'element-ui'
 import { UserModule } from '@/store/modules/user'
 
 const service = axios.create({
-  baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
+   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
   timeout: 5000,
   withCredentials: true // send cookies when cross-domain requests
 })
 
-// Request interceptors
-// cookies
-/*
-service.interceptors.request.use(
-  (config) => {
-    const cookies = document.cookie.split(';')
-    cookies.forEach((cookie) => {
-      const [name, value] = cookie.split('=')
-      config.headers[name.trim()] = value
-    })
-    return config
-  },
-  (error) => {
-    Promise.reject(error)
-  }
-) */
 
 service.interceptors.request.use(
+  // 这里传的是一个UserModule.token
   (config) => {
     // Add X-Access-Token header to every request, you can add other custom headers here
     if (UserModule.token) {
@@ -50,6 +35,7 @@ service.interceptors.response.use(
     // code == 50005: username or password is incorrect
     // You can change this part for your own usage.
     const res = response.data
+    // 200:OK 201:Created 401:Unauthorized 403:Forbidden 4-4:Not Found
     if (res.code !== 200) {
       Message({
         message: res.message || 'Error',

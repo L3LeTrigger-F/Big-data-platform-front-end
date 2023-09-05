@@ -16,20 +16,6 @@
         />
       </el-input>
       <!-- 选择类型 -->
-      <el-select
-        v-model="listQuery.type"
-        :placeholder="$t('table.type')"
-        clearable
-        class="filter-item"
-        style="width: 130px"
-      >
-        <el-option
-          v-for="item in calendarTypeOptions"
-          :key="item.key"
-          :label="item.displayName+'('+item.key+')'"
-          :value="item.key"
-        />
-      </el-select>
       <!-- 排序 -->
       <el-select
         v-model="listQuery.sort"
@@ -97,38 +83,79 @@
         </template>
       </el-table-column>
 
-      <!-- 显示证据链头-->
+      <!-- 证据头 -->
       <el-table-column
-        :label="$t('table.evi_head')"
-        width="250px"
         align="center"
+        label="证据头"
+        width="420px"
+      >
+      <template slot-scope="{row}">
+          <span>{{ row.head_evidence_id }}</span>
+        </template>
+        </el-table-column>
+    <!-- 证据链 -->
+      <el-table-column
+        width="420px"
+        align="center"
+        label="证据2"
       >
         <template slot-scope="{row}">
-          <span>{{ row.evidence_head_id }}</span>
+          <span>{{ row.evidence2_id }}</span>
         </template>
       </el-table-column>
-
-      <!-- 证据链id -->
+    <!-- 证据尾 -->
       <el-table-column
-        :label="$t('table.evi_id')"
-        min-width="300px"
+        align="center"
+        label="证据3"
+        width="420px"
       >
         <template slot-scope="{row}">
-          <span
-            class="link-type"
-            @click="handleUpdate(row)"
-          >{{ row.evidence_id }}</span>
-          <!-- <el-tag>{{ row.type | typeFilter }}</el-tag> -->
+          <span>{{ row.evidence3_id }}</span>
         </template>
       </el-table-column>
-      <!-- 证据链尾 -->
-      <el-table-column
-        :label="$t('table.evi_tail')"
-        width="250px"
+          <el-table-column
         align="center"
+        label="证据4"
+        width="420px"
       >
         <template slot-scope="{row}">
-          <span>{{ row.evidence_tail_id }}</span>
+          <span>{{ row.evidence4_id }}</span>
+        </template>
+      </el-table-column>
+        <el-table-column
+        align="center"
+        label="证据5"
+        width="420px"
+      >
+        <template slot-scope="{row}">
+          <span>{{ row.evidence5_id }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        align="center"
+        label="证据6"
+        width="420px"
+      >
+        <template slot-scope="{row}">
+          <span>{{ row.evidence6_id }}</span>
+        </template>
+      </el-table-column>
+        <el-table-column
+        align="center"
+        label="证据7"
+        width="420px"
+      >
+        <template slot-scope="{row}">
+          <span>{{ row.evidence7_id }}</span>
+        </template>
+      </el-table-column>
+            <el-table-column
+        align="center"
+        label="证据尾"
+        width="420px"
+      >
+        <template slot-scope="{row}">
+          <span>{{ row.tail_evidence_id }}</span>
         </template>
       </el-table-column>
 
@@ -142,7 +169,7 @@
           <el-button
             type="primary"
             size="mini"
-            @click="handleUpdate(row)"
+            @click="showdialogForm(row.id)"
           >
             {{ $t('table.edit') }}
           </el-button>
@@ -151,10 +178,22 @@
             v-if="row.status!=='deleted'"
             size="mini"
             type="danger"
-            @click="handleDelete(row, $index)"
+            @click="showConfirmDialog()"
           >
             {{ $t('table.delete') }}
           </el-button>
+          <el-dialog
+            title="确认删除"
+            :visible.sync="confirmDialogVisible"
+            width="30%"
+            @close="handleConfirmDialogClose"
+          >
+              <span>确定要删除该条目吗？</span>
+              <span slot="footer" class="dialog-footer">
+              <el-button @click="handleDelete(row, $index)">确定</el-button>
+              <el-button @click="cancelDelete()">取消</el-button>
+      </span>
+    </el-dialog>
         </template>
       </el-table-column>
     </el-table>
@@ -176,7 +215,7 @@
     <el-form
         ref="dataForm"
         :rules="rules"
-        :model="tempArticleData"
+        :model="detailData"
         label-position="left"
         label-width="100px"
         style="width: 400px; margin-left:50px;"
@@ -184,7 +223,7 @@
       <!-- 证据链头 -->
         <el-form-item :label="$t('table.evi_head')">
           <el-input
-            v-model="tempArticleData.evidence_head_id"
+            v-model="detailData.evidence_head_id"
             :autosize="{minRows: 1, maxRows: 1}"
             type="textarea"
             placeholder="Please input"
@@ -193,7 +232,7 @@
         <!-- 证据链尾 -->
         <el-form-item :label="$t('table.evi_tail')">
           <el-input
-            v-model="tempArticleData.evidence_tail_id"
+            v-model="detailData.evidence_tail_id"
             :autosize="{minRows: 1, maxRows: 1}"
             type="textarea"
             placeholder="Please input"
@@ -202,7 +241,7 @@
         <!-- 评论 -->
         <el-form-item :label="$t('table.remark')">
           <el-input
-            v-model="tempArticleData.evidence_id"
+            v-model="detailData.evidence_id"
             :autosize="{minRows: 2, maxRows: 4}"
             type="textarea"
             placeholder="Please input"
@@ -262,24 +301,12 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { Form } from 'element-ui'
 import { cloneDeep } from 'lodash'
-import { getArticles, getPageviews, createArticle, updateArticle, defaultArticleData, deleteArticle } from '@/api/articles'
+import { getArticles, getPageviews, createArticle,detailArticles, updateArticle, defaultArticleData, deleteArticle } from '@/api/articles'
 import { EvidenceChainData } from '@/api/types'
-import { exportJson2Excel } from '@/utils/excel'
-import { formatJson } from '@/utils'
 import Pagination from '@/components/Pagination/index.vue'
 
-const calendarTypeOptions = [
-  { key: 'CN', displayName: 'China' },
-  { key: 'US', displayName: 'USA' },
-  { key: 'JP', displayName: 'Japan' },
-  { key: 'EU', displayName: 'Eurozone' }
-]
 
 // arr to obj, such as { CN : "China", US : "USA" }
-const calendarTypeKeyValue = calendarTypeOptions.reduce((acc: { [key: string]: string }, cur) => {
-  acc[cur.key] = cur.displayName
-  return acc
-}, {}) as { [key: string]: string }
 
 @Component({
   name: 'ComplexTable',
@@ -288,7 +315,6 @@ const calendarTypeKeyValue = calendarTypeOptions.reduce((acc: { [key: string]: s
   },
   filters: {
     typeFilter: (type: string) => {
-      return calendarTypeKeyValue[type]
     }
   }
 })
@@ -301,20 +327,19 @@ export default class extends Vue {
     page_id: 1,
     limit: 20,
     // importance: undefined,
-    table_id: 1,
+    table_id: 7,
     title: undefined,
     type: undefined,
     sort: '+id'
   }
 
   private importanceOptions = [1, 2, 3]
-  private calendarTypeOptions = calendarTypeOptions
   private sortOptions = [
     { label: 'ID Ascending', key: '+id' },
     { label: 'ID Descending', key: '-id' }
   ]
+  private confirmDialogVisible=false
 
-  // private statusOptions = ['published', 'draft', 'deleted']
   private showReviewer = false
   private dialogFormVisible = false
   private dialogStatus = ''
@@ -333,7 +358,7 @@ export default class extends Vue {
 
   private downloadLoading = false
   private tempArticleData = defaultArticleData
-
+  private detailData:any[]=[]
   created() {
     this.getList()
   }
@@ -377,6 +402,9 @@ export default class extends Vue {
     }
     this.handleFilter()
   }
+    private showConfirmDialog(){
+    this.confirmDialogVisible=true
+  }
 
   private getSortClass(key: string) {
     const sort = this.listQuery.sort
@@ -414,15 +442,6 @@ export default class extends Vue {
     })
   }
 
-  private handleUpdate(row: any) {
-    this.tempArticleData = Object.assign({}, row)
-    // this.tempArticleData.timestamp = +new Date(this.tempArticleData.timestamp)
-    this.dialogStatus = 'update'
-    this.dialogFormVisible = true
-    this.$nextTick(() => {
-      (this.$refs.dataForm as Form).clearValidate()
-    })
-  }
 
   private updateData() {
     (this.$refs.dataForm as Form).validate(async(valid) => {
@@ -430,7 +449,7 @@ export default class extends Vue {
         // this.tempArticleData=.unshift(data.article)
         const tempData = Object.assign({}, this.tempArticleData)
         // tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-        const { data } = await updateArticle({table_ID:this.listQuery.table_id, tempData_ID: this.tempArticleData.id, article: tempData })
+        const { data } = await updateArticle({tableId:this.listQuery.table_id, tempId: this.tempArticleData.id, article: tempData })
         const index = this.list.findIndex(v => v.id === data.article.id)
         this.list.splice(index, 1, data.article)
         this.dialogFormVisible = false
@@ -445,13 +464,14 @@ export default class extends Vue {
   }
 
   private handleDelete(row: any, index: number) {
-    deleteArticle({ table_id: this.listQuery.table_id, row_id: row.id })
-    this.$notify({
-      title: 'Success',
-      message: 'Delete Successfully',
-      type: 'success',
-      duration: 2000
-    })
+    deleteArticle({ tableId: this.listQuery.table_id, itemId: row.id })
+    // this.$notify({
+      // title: 'Success',
+      // message: 'Delete Successfully',
+      // type: 'success',
+      // duration: 2000
+    // })
+    this.confirmDialogVisible=false
     this.list.splice(index, 1)
   }
 
@@ -459,6 +479,15 @@ export default class extends Vue {
     const { data } = await getPageviews({ pageviews })
     this.pageviewsData = data.pageviews
     this.dialogPageviewsVisible = true
+  }
+  private cancelDelete(){
+    this.confirmDialogVisible=false
+  }
+  private async showdialogForm(row:any){
+    this.dialogFormVisible=true
+    this.dialogStatus='update'
+    const { data }=await detailArticles({tableId:this.listQuery.table_id, itemId: row})
+    this.detailData=data.items
   }
 }
 </script>

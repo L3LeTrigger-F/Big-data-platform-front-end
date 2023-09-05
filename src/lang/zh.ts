@@ -64,7 +64,13 @@ export default {
     externalLink: '外链',
     profile: '个人中心',
     dialog: '日志',
-    users: '用户管理'
+    users: '用户管理',
+    dialog_edit:"日志管理",
+    rulesmanage:'关联规则管理',
+    rulesvisit:'关联规则查看',
+    rules_assiosicated:'关联规则',
+    evidence_edit: "证据管理",
+    evidence_visit: "证据查看"
   },
   navbar: {
     logOut: '退出登录',
@@ -137,7 +143,24 @@ export default {
     draft: '草稿',
     delete: '删除',
     cancel: '取 消',
-    confirm: '确 定'
+    confirm: '确 定',
+    dialog_time:'日志记录时间',
+    dialog_name:'日志名',
+    dialog_des:'日志描述',
+    dialog_kind:'日志分类',
+    dialog_lev:'日志等级',
+    equip_no:'设备编号',
+    equip_name:'设备名称',
+    operation:'操作'
+
+  },
+  users:{
+    id:'用户id',
+    name:'登录用户名',
+    cryptology:'登录密码',
+    create_time:'创建时间',
+    character:'用户角色',
+    action:'操作'
   },
   example: {
     warning: '创建和编辑页面是不能被 keep-alive 缓存的，因为keep-alive 的 include 目前不支持根据路由来缓存，所以目前都是基于 component name 来进行缓存的。如果你想类似的实现缓存效果，可以使用 localStorage 等浏览器缓存方案。或者不要使用 keep-alive 的 include，直接缓存所有页面。详情见'
@@ -177,5 +200,40 @@ export default {
     showSidebarLogo: '显示侧边栏 Logo',
     fixedHeader: '固定 Header',
     sidebarTextTheme: '侧边栏文字主题色'
-  }
+  },
+  evidence: {
+    dynamicTips1: "固定表头, 按照表头顺序排序",
+    dynamicTips2: "不固定表头, 按照点击顺序排序",
+    dragTips1: "默认顺序",
+    dragTips2: "拖拽后顺序",
+    title: "标题",
+    importance: "重要性",
+    author: "作者",
+    readings: "阅读数",
+    status: "状态",
+    actions: "操作",
+    edit: "编辑",
+    publish: "发布",
+    draft: "草稿",
+    delete: "删除",
+    cancel: "取 消",
+    confirm: "确 定",
+    type: "类型",
+    remark: "证据链",
+    search: "搜索",
+    add: "添加",
+    export: "导出",
+    reviewer: "审核人",
+
+    yu: "所在域",
+    type1: "攻击类型",
+    type2: "日志归属类型",
+    type3: "操作类型",
+    id: "证据id",
+    name: "设备名",
+    result: "操作结果",
+    src_id: "操作主体",
+    dst_id: "操作客体",
+    date: "日志记录时间"
+  },
 }

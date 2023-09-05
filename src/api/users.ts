@@ -1,15 +1,24 @@
 import request from '@/utils/request'
 import axios from 'axios'
+import { UsersData } from "./types"
+export const defaultUsersData: UsersData = {
+  user_id: '0',//yonghu id
+  user_name: '',
+  password: '',
+  role:'2',//用户角色
+  address:'',
+  user_data:new Date('2023-07-25T12:34:56Z')
+}
+
 export const getUsers = (params: any) =>
   request({
-    url: '/users',
+    url: '/show',
     method: 'get',
     params
   })
 
 export const getUserInfo = (data: any) =>
   request({
-    // url: '/users/info',
     url: '/init',
     method: 'post',
     data
@@ -21,49 +30,20 @@ export const getUserByName = (username: string) =>
     method: 'get'
   })
 
-export const updateUser = (username: string, data: any) =>
+export const updateUser = (params: any) =>
   request({
-    url: `/users/${username}`,
-    method: 'put',
-    data
+    url: '/modify',
+    method: 'post',
+    params
   })
 
-export const deleteUser = (username: string) =>
+export const deleteUser = (params:any) =>
   request({
-    url: `/users/${username}`,
-    method: 'delete'
+    url: '/delete',
+    method: 'delete',
+    params
   })
 
-// export const login = async(username: string, password: string) => {
-// try {
-// const response = await axios.post('/login', { username, password })
-// const { success, message } = response.data
-// Handle the login response
-// if (success) {
-// console.log('Login successful')
-// console.log('Message:', message)
-// request({
-// url: '/users/login',
-// method: 'post',
-// password
-// })    
-// Perform any actions for successful login
-// } else {
-// console.log('Login failed')
-// console.log('Message:', message)
-// Perform any actions for failed login
-// }
-// } catch (error) {
-// console.error('An error occurred during login')
-// Handle error cases
-// }
-// }
-// export const login = (data: any) =>
-// request({
-// url: '/users/login',
-// method: 'post',
-// data
-// })
 export const login = (data: any) =>
   request({
     url: '/login',
