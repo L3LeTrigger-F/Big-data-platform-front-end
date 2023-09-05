@@ -135,7 +135,44 @@ export const asyncRoutes: RouteConfig[] = [
       }
     ]
   },
-  tableRouter,
+  {
+    path: '/evidence-chain',
+    component: Layout,
+    redirect: '/evidence-chain/evidence-edit',
+    name: 'Table',
+    meta: {
+      title: 'table',
+      icon: 'table',
+      affix: true,
+      roles: ['operator','auditor']
+    },
+    children: [
+      {
+        path: 'evidence-edit',
+        component: () => import(/* webpackChunkName: "complex-table" */ '@/views/evidence-chain/evidence-edit.vue'),
+        name: 'ComplexTable',
+        meta: { title: 'complexTable' ,
+        icon: "example",
+        roles: ['operator'],
+        affix:true
+      },
+      },
+      {
+        path: 'evidence-visit',
+        component: () =>
+        import(
+          /* webpackChunkName: "inline-edit-table" */ '@/views/evidence-chain/evidence-visit.vue'
+          ),
+        name: 'InlineEditTable',
+        meta: {
+          icon: 'table',
+          title: 'inlineEditTable',
+          affix:true,
+          roles: ['operator','auditor']
+        }
+      }
+    ]
+  },
   {
     path: '/rules-associated',
     component: Layout,
@@ -181,7 +218,7 @@ export const asyncRoutes: RouteConfig[] = [
     roles: ["operator"] },
     children: [
       {
-        path: "/evidence/evidence-edit",
+        path: "evidence-edit",
         component: () =>
           import(
             /* webpackChunkName: "dashboard" */ "@/views/evidence/evidence-edit.vue"

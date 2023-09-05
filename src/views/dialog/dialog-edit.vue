@@ -489,6 +489,7 @@ export default class extends Vue {
   private handleDelete(row: any, index: number) {
     deleteDialogs({ tableId: this.listQuery.table_id, itemId: row.id })
     this.confirmDialogVisible=false
+    // 如果deleteDialogs运行成功，则会删除。所以现在报404的错
     this.list.splice(index, 1)
   }
   private sortChange(data: any) {

@@ -9,7 +9,7 @@ const tableRoutes: RouteConfig = {
   meta: {
     title: 'table',
     icon: 'table',
-    affix: false,
+    affix: true,
     roles: ['operator','auditor']
   },
   children: [
@@ -20,6 +20,7 @@ const tableRoutes: RouteConfig = {
       meta: {
         icon: 'table',
         title: 'inlineEditTable',
+        affix:true,
         roles: ['operator','auditor']
       }
     },
@@ -30,7 +31,9 @@ const tableRoutes: RouteConfig = {
       name: 'ComplexTable',
       meta: { title: 'complexTable' ,
       icon: "example",
-      roles: ['operator']},
+      roles: ['operator'],
+      affix:true
+    },
 
     }
   ]

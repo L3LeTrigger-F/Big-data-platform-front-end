@@ -472,7 +472,6 @@ acc[cur.key] = cur.displayName
     private handleUpdate(row: any) {
       this.tempArticleData = Object.assign({}, row)
       this.dialogFormVisible = true
-      // this.tempArticleData.timestamp = +new Date(this.tempArticleData.timestamp)
       this.dialogStatus = 'update'
       this.$nextTick(() => {
         (this.$refs.dataForm as Form).clearValidate()
@@ -482,13 +481,11 @@ acc[cur.key] = cur.displayName
     private updateData() {
       (this.$refs.dataForm as Form).validate(async(valid) => {
         if (valid) {
-          // this.tempArticleData=.unshift(data.article)
           const tempData = Object.assign({}, this.tempArticleData)
-          // tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
+          this.dialogFormVisible = false
           const { data } = await updateRules({tableId:this.listQuery.table_id, tempId: this.tempArticleData.id, article: tempData })
           const index = this.list.findIndex(v => v.id === data.article.id)
           this.list.splice(index, 1, data.article)
-          this.dialogFormVisible = false
           this.$notify({
             title: '成功',
             message: '更新成功',
@@ -504,12 +501,6 @@ acc[cur.key] = cur.displayName
 
       this.confirmDialogVisible=false
       this.list.splice(index, 1)
-    }
-
-    private async handleGetPageviews(pageviews: string) {
-      const { data } = await getPageviews({ pageviews })
-      this.pageviewsData = data.pageviews
-      this.dialogPageviewsVisible = true
     }
   }
   </script>

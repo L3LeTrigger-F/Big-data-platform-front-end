@@ -4,7 +4,7 @@
       <el-row>
           <el-row>
             <el-col :span="12">
-              <!-- 搜索框 逻辑是输入什么根据下面的button，默认是日志搜索 -->
+              <!-- 搜索框 逻辑是输入什么根据下面的button，默认是日志数据搜索 -->
             <el-input
             v-model="listQuery.title"
             :placeholder="请输入内容"
@@ -53,11 +53,7 @@
           {{ scope.row[key] }}
         </template>
       </el-table-column>
-    <!-- id -->
-      <!-- <el-table-column v-for="column in tableData" :key="column.key" :prop="column.key" :label="column.label"> -->
-      <!-- </el-table-column> -->
-      <!-- <el-table-column v-for="column in tableData"> -->
-        <!-- {{ row[column.items] }} -->
+
     </el-table>
     <div v-else class="no-data">暂无数据</div>
         <pagination

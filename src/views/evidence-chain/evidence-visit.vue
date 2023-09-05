@@ -3,18 +3,12 @@
     <div class="filter-container">
       <!-- 输入框 -->
       <el-input
-        v-model="listQuery.search_info"
+        v-model="listQuery.title"
         :placeholder="$t('table.title')"
         style="width: 60%;"
         class="filter-item"
         @keyup.enter.native="handleFilter"
       >
-      <el-option
-          v-for="item in importanceOptions"
-          :key="item"
-          :label="item"
-          :value="item"
-        />
     </el-input>
     <!-- 搜索按钮 -->
       <el-button
@@ -29,7 +23,6 @@
     </div>
     <!-- 表格列 -->
     <el-table
-    :key="tableKey"
       v-loading="listLoading"
       :data="list"
       border
@@ -139,17 +132,22 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
+import { Form } from 'element-ui'
 import { getArticles } from '@/api/articles'
 import { EvidenceChainData  } from '@/api/types'
 import Pagination from '@/components/Pagination/index.vue'
 
 @Component({
-  name: 'InlineEditTable',
+  name: 'ComplexTable',
   components: {
     Pagination
+  },
+    filters: {
+    typeFilter: (type: string) => {
+    }
   }
 })
-//这里命名写死了
+//这里命名写死了，因为具体是什么还没定
 //  id:number//id序号
  // evidence_head_id:number//证据头
  // evidence_id:number[]//证据链
@@ -176,7 +174,6 @@ export default class extends Vue {
   private async getList() {
     this.listLoading = true
     const { data } = await getArticles(this.listQuery)
-    const items = data.items
     this.total = data.total
     this.list = data.items
     // this.list = items.map((v: any) => {
@@ -197,6 +194,10 @@ export default class extends Vue {
   private handleFilter() {
     this.listQuery.page_id = 1
     this.getList()
+  }
+  private getSortClass(key: string) {
+    const sort = this.listQuery.sort
+    return sort === `+${key}` ? 'ascending' : 'descending'
   }
 }
 </script>
