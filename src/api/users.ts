@@ -1,13 +1,21 @@
 import request from '@/utils/request'
 import axios from 'axios'
 import { UsersData } from "./types"
+/* eslint-disable */
+// eslint-disable-next-line
 export const defaultUsersData: UsersData = {
-  user_id: '0',//yonghu id
-  user_name: '',
-  password: '',
-  role:'2',//用户角色
+  user_id: '0',// yonghu id
+  user_name: 'iser',
+  password: '123456',
+  role:'2',// 用户角色
   address:'',
-  user_data:new Date('2023-07-25T12:34:56Z')
+  user_data:new Date('2023-07-25T12:34:56Z'),
+  name:'nick',
+  email:'123456@gmail.com',
+  phone:'123456',
+  avatar:'sha',
+  introduction:'aa',
+  roles:'aaa'
 }
 
 export const getUsers = (params: any) =>

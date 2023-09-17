@@ -428,7 +428,7 @@ export default class extends Vue {
     (this.$refs.dataForm as Form).validate(async(valid) => {
       if (valid) {
         const articleData = this.tempArticleData
-        articleData.id = Math.round(Math.random() * 100) + 1024 // mock a id
+        articleData.id = (Math.round(Math.random() * 100) + 1024).toString() // mock a id
         const { data } = await createArticle({ table_id: this.listQuery.table_id, articleData: this.tempArticleData })
         this.list.unshift(this.tempArticleData)
         this.dialogFormVisible = false

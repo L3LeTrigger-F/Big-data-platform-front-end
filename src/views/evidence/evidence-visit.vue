@@ -1,3 +1,5 @@
+/* eslint-disable */
+// eslint-disable-next-line
 <template>
   <div class="app-container">
     <div class="filter-container">
@@ -485,7 +487,9 @@ export default class extends Vue {
     details: 'Details',
     create: 'Create'
   }
+
   private row1 =''
+
   private index1 =0
 
   private dialogPageviewsVisible = false
@@ -565,8 +569,7 @@ export default class extends Vue {
     (this.$refs.dataForm as Form).validate(async(valid) => {
       if (valid) {
         const EvidenceData = this.tempEvidenceData
-        EvidenceData.id = Math.round(Math.random() * 100) + 1024 // mock a id
-        EvidenceData.author = 'vue-typescript-admin'
+        EvidenceData.evi_id = (Math.round(Math.random() * 100) + 1024).toString() // mock a id
         const { data } = await createEvidence({ Evidence: EvidenceData })
         data.Evidence.timestamp = Date.parse(data.Evidence.timestamp)
         this.list.unshift(data.Evidence)
@@ -583,14 +586,12 @@ export default class extends Vue {
 
   private handleUpdate(row: any) {
     this.tempEvidenceData = Object.assign({}, row)
-    this.tempEvidenceData.timestamp = +new Date(this.tempEvidenceData.timestamp)
     this.dialogStatus = 'update'
     this.dialogFormVisible = true
     this.$nextTick(() => {
       (this.$refs.dataForm as Form).clearValidate()
     })
   }
-
 
   private handleDetails(row: any, index: number) {
     this.tempEvidenceData = Object.assign({}, row)
@@ -607,9 +608,8 @@ export default class extends Vue {
     (this.$refs.dataForm as Form).validate(async(valid) => {
       if (valid) {
         const tempData = Object.assign({}, this.tempEvidenceData)
-        tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-        const { data } = await updateEvidence(tempData.id, { Evidence: tempData })
-        const index = this.list.findIndex(v => v.id === data.Evidence.id)
+        const { data } = await updateEvidence({ tableId: tempData.evi_id, Evidence: tempData })
+        const index = this.list.findIndex(v => v.evi_id === data.Evidence.evi_id)
         this.list.splice(index, 1, data.Evidence)
         this.dialogFormVisible = false
         this.$notify({
