@@ -1,3 +1,5 @@
+// eslint-disable-next-line
+/* eslint-disable */
 <template>
   <div class="app-container">
  <!--以上都是搜索框的内容  -->
@@ -374,7 +376,7 @@ export default class extends Vue {
         // this.tempArticleData=.unshift(data.article)
         const tempData = Object.assign({}, this.tempUsersData)
         // tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-        const { data } = await updateUser({table_ID:this.listQuery.table_id, tempData_ID: this.tempUsersData.id, article: tempData })
+        const { data } = await updateUser({table_ID:this.listQuery.table_id, tempData_ID: this.tempUsersData.user_id, article: tempData })
         const index = this.list.findIndex(v => v.id === data.article.id)
         this.list.splice(index, 1, data.article)
         this.dialogFormVisible = false

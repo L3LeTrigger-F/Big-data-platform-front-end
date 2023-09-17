@@ -1,3 +1,5 @@
+// eslint-disable-next-line
+/* eslint-disable */
 <template>
   <div class="app-container">
     <div class="filter-container">
@@ -470,7 +472,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { Form } from 'element-ui'
 import { cloneDeep } from 'lodash'
-import { getEvidences, getPageviews, createEvidence, updateEvidence, defaultEvidenceData,deleteEvidence } from '@/api/evidence'
+import { getEvidences, getPageviews, createEvidence, updateEvidence, defaultEvidenceData,deleteEvidence,detailArticles } from '@/api/evidence'
 import { EvidenceData } from '@/api/types'
 import { exportJson2Excel } from '@/utils/excel'
 import { formatJson } from '@/utils'
@@ -541,7 +543,7 @@ export default class extends Vue {
 
   private downloadLoading = false
   private tempEvidenceData = defaultEvidenceData
-
+  private detailData:any[]=[]
   created() {
     this.getList()
   }
@@ -615,7 +617,7 @@ export default class extends Vue {
     (this.$refs.dataForm as Form).validate(async(valid) => {
       if (valid) {
         const EvidenceData = this.tempEvidenceData
-        EvidenceData.evi_id = Math.round(Math.random() * 100) + 1024 // mock a id
+        EvidenceData.evi_id = (Math.round(Math.random() * 100) + 1024).toString() // mock a id
         const { data } = await createEvidence({ Evidence: EvidenceData })
         data.Evidence.timestamp = Date.parse(data.Evidence.timestamp)
         this.list.unshift(data.Evidence)
@@ -643,7 +645,7 @@ export default class extends Vue {
     (this.$refs.dataForm as Form).validate(async(valid) => {
       if (valid) {
         const tempData = Object.assign({}, this.tempEvidenceData)
-        const { data } = await updateEvidence(tempData.evi_id, { Evidence: tempData })
+        const { data } = await updateEvidence( { tableId:tempData.evi_id,Evidence: tempData })
         const index = this.list.findIndex(v => v.evi_id === data.Evidence.id)
         this.list.splice(index, 1, data.Evidence)
         this.dialogFormVisible = false

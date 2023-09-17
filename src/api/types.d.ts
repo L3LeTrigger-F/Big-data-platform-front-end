@@ -88,6 +88,13 @@ export interface EvidenceChainData {
   evidence7_id:string;
   tail_evidence_id:string;//终止证据id
 }
+export interface ITransactionData {
+  orderId: string
+  timestamp: string | number
+  username: string
+  price: number
+  status: string
+}
 export interface IRoleData{
   key: string;
   name: string;
